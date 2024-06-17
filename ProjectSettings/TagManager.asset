@@ -15,9 +15,9 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
+  - PlayerUnit
+  - OpponentUnit
+  - BattleZone
   - 
   - 
   - 
