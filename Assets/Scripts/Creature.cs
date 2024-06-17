@@ -25,6 +25,7 @@ public class Creature : MonoBehaviour
     [HideInInspector]
     public Creature target;
     public int targetRange;
+    public BattleZone zone;
 
     private void Update ()
     {

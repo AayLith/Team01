@@ -71,7 +71,6 @@ public class BattleController : MonoBehaviour
     public void startBattlePreparation ( List<Creature> player , List<Creature> opponent )
     {
         playerUnits.Clear ();
-        playerReserveUnits = player;
         opponentUnits = opponent;
         currentPhase = battlePhases.preparation;
 
@@ -91,15 +90,15 @@ public class BattleController : MonoBehaviour
                 else if ( bz.range > zone.range && bz.range <= c.preferedRange )
                     zone = bz;
             c.transform.localScale = new Vector3 ( -1 * Mathf.Sign ( c.transform.localScale.x ) * c.transform.localScale.x , c.transform.localScale.y , c.transform.localScale.z );
-            placeUnit ( zone , c );
+            moveUnitToZone ( zone , c );
         }
 
-        foreach ( Creature c in playerReserveUnits )
+        foreach ( Creature c in player )
         {
             // TODO Instanciate creatures
 
             // Placer creatures inside player reserve zone
-            placeUnit ( playerReserve , c );
+            moveUnitToReserve ( playerReserve , c );
         }
 
 
@@ -116,6 +115,7 @@ public class BattleController : MonoBehaviour
             // If L-click on a player creature, start dragging
             if ( Input.GetAxis ( "Fire1" ) != 0 && currentUnit != null )
             {
+                currentUnit.zone = null;
                 while ( Input.GetAxis ( "Fire1" ) != 0 )
                 {
                     currentUnit.transform.position = mouseWorldPos + unitSelectOffset;
@@ -391,18 +391,17 @@ public class BattleController : MonoBehaviour
         hoverZone.sprite.color = c;
     }
 
-    void placeUnit ( BattleZone zone , Creature unit )
+    void placeUnit ( BattleZone zone , Creature unit , Vector3 pos = new Vector3 () )
     {
-        SpriteRenderer sr = zone.gameObject.GetComponent<SpriteRenderer> ();
-        Vector3 pos = new Vector3 ( Random.Range ( sr.bounds.min.x , sr.bounds.max.x ) , Random.Range ( sr.bounds.min.y , sr.bounds.max.y ) ) - zone.transform.position;
-        unit.transform.position = pos * 0.8f + zone.transform.position;
-        unit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( -90 , 0 , 0 ) );
-        zone.creatures.Add ( unit );
-    }
+        if ( pos == Vector3.zero )
+        {
+            SpriteRenderer sr = zone.gameObject.GetComponent<SpriteRenderer> ();
+            pos = new Vector3 ( Random.Range ( sr.bounds.min.x , sr.bounds.max.x ) , Random.Range ( sr.bounds.min.y , sr.bounds.max.y ) ) - zone.transform.position;
+            unit.transform.position = pos * 0.8f + zone.transform.position;
+        }
+        else
+            unit.transform.position = pos;
 
-    void placeUnit ( BattleZone zone , Creature unit , Vector3 pos )
-    {
-        unit.transform.position = pos;
         unit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( -90 , 0 , 0 ) );
         zone.creatures.Add ( unit );
     }
@@ -410,6 +409,9 @@ public class BattleController : MonoBehaviour
     void moveUnitToZone ( BattleZone zone , Creature unit )
     {
         placeUnit ( zone , unit , mouseWorldPos );
+        if ( unit.zone )
+            unit.zone.creatures.Remove ( unit );
+        unit.zone = zone;
         playerUnits.Add ( unit );
         playerReserveUnits.Remove ( unit );
         zone.creatures.Add ( unit );
@@ -417,7 +419,10 @@ public class BattleController : MonoBehaviour
 
     void moveUnitToReserve ( BattleZone zone , Creature unit )
     {
-        placeUnit ( zone , unit );
+        placeUnit ( playerReserve , unit );
+        if ( unit.zone )
+            unit.zone.creatures.Remove ( unit );
+        unit.zone = playerReserve;
         playerUnits.Remove ( unit );
         playerReserveUnits.Add ( unit );
         zone.creatures.Remove ( unit );
