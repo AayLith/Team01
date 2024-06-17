@@ -189,8 +189,11 @@ public class BattleController : MonoBehaviour
                             range = plz.range + opz.range - 1;
                         }
                     // Choose a target at random
-                    attacker.target = targets[ Random.Range ( 0 , targets.Count ) ];
-                    attacker.targetRange = range;
+                    if ( targets.Count > 0 )
+                    {
+                        attacker.target = targets[ Random.Range ( 0 , targets.Count ) ];
+                        attacker.targetRange = range;
+                    }
                 }
             foreach ( BattleZone plz in opponentZones )
                 foreach ( Creature attacker in plz.creatures )
@@ -205,8 +208,11 @@ public class BattleController : MonoBehaviour
                             range = plz.range + opz.range - 1;
                         }
                     // Choose a target at random
-                    attacker.target = targets[ Random.Range ( 0 , targets.Count ) ];
-                    attacker.targetRange = range;
+                    if ( targets.Count > 0 )
+                    {
+                        attacker.target = targets[ Random.Range ( 0 , targets.Count ) ];
+                        attacker.targetRange = range;
+                    }
                 }
 
             // Attacks and Abilities
