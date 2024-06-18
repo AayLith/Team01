@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Creature : MonoBehaviour
 {
+    [TextArea ( 3 , 10 )]
+    public string description;
+
     public SpriteRenderer spriteRenderer;
     [Min ( 1 )]
     public int health = 2;
@@ -46,7 +49,7 @@ public class Creature : MonoBehaviour
         healthbar.init ( curhealth , health , healthWidth , healthHeight , healthOffset );
     }
 
-    public void takeDamages (int amount)
+    public void takeDamages ( int amount )
     {
         curhealth -= amount;
         healthbar.updateValue ( curhealth );
