@@ -89,7 +89,7 @@ public class BattleController : MonoBehaviour
                 }
                 else if ( bz.range > zone.range && bz.range <= c.preferedRange )
                     zone = bz;
-            c.transform.localScale = new Vector3 ( -1 * Mathf.Sign ( c.transform.localScale.x ) * c.transform.localScale.x , c.transform.localScale.y , c.transform.localScale.z );
+            c.spriteRenderer.transform.localScale = new Vector3 ( -1 * Mathf.Sign ( c.transform.localScale.x ) * c.transform.localScale.x , c.transform.localScale.y , c.transform.localScale.z );
             moveUnitToZone ( zone , c );
         }
 
@@ -229,7 +229,7 @@ public class BattleController : MonoBehaviour
             // Kill units with 0 hp and clamp unit hp
             foreach ( Creature c in creatures )
                 if ( c.curhealth > c.health ) c.curhealth = c.health;
-                else if ( c.curhealth <= 0 )
+                else if ( c.curhealth <= 0 && !c.isdying )
                 {
                     StartCoroutine ( killUnit ( c ) );
                     yield return new WaitForSeconds ( 0.05f );
@@ -260,30 +260,51 @@ public class BattleController : MonoBehaviour
     IEnumerator attack ( Creature attacker , Creature target )
     {
         // Wind up
-        for ( int i = 1 ; i < 6 ; i++ )
+        yield return StartCoroutine ( animDash ( attacker.spriteRenderer.gameObject , 5 , 0.025f ) );
+        // Cast animation
+        if ( attacker.attackCast )
         {
-            attacker.spriteRenderer.transform.localPosition += new Vector3 ( 0.01f , 0 , 0 );
-            yield return null;
+            GameObject castAnim = Instantiate ( attacker.attackCast , attacker.transform.position , attacker.attackCast.transform.rotation );
+            yield return StartCoroutine ( waitForDestruction ( castAnim ) );
+        }
+        // Forward
+        yield return StartCoroutine ( animDash ( attacker.spriteRenderer.gameObject , 5 , -0.075f ) );
+        // Wind down
+        StartCoroutine ( animDash ( attacker.spriteRenderer.gameObject , 5 , 0.05f ) );
+        // Projectile
+        if ( attacker.attackProjectile )
+        {
+            GameObject projectileAnim = Instantiate ( attacker.attackProjectile , attacker.transform.position + new Vector3 ( 0 , 0 , -0.05f ) , attacker.attackProjectile.transform.rotation );
+            while ( Vector3.Distance ( projectileAnim.transform.position , target.transform.position + new Vector3 ( 0 , 0 , -0.05f ) ) > 0.01f )
+            {
+                projectileAnim.transform.position = Vector3.MoveTowards ( projectileAnim.transform.position , target.transform.position + new Vector3 ( 0 , 0 , -0.05f ) , attacker.projectileSpeed );
+                yield return null;
+            }
+            Destroy ( projectileAnim );
         }
         // Hit
-        for ( int i = 1 ; i < 6 ; i++ )
-        {
-            attacker.spriteRenderer.transform.localPosition += new Vector3 ( -0.03f , 0 , 0 );
-            yield return null;
-        }
-
+        if ( attacker.attackHit )
+            Instantiate ( attacker.attackHit , target.transform.position + new Vector3 ( 0 , 0 , -0.05f ) , attacker.attackHit.transform.rotation );
         // Damages
         if ( attacker.targetRange == 1 )
             target.takeDamages ( attacker.meleeDmg );
         else
             target.takeDamages ( attacker.rangedDmg );
-        // Insert attack animation
 
+        yield return new WaitForSeconds ( 0.2f );
+    }
 
-        // Wind down
-        for ( int i = 1 ; i < 6 ; i++ )
+    IEnumerator waitForDestruction ( GameObject go )
+    {
+        while ( go != null )
+            yield return null;
+    }
+
+    IEnumerator animDash ( GameObject go , int steps , float distance )
+    {
+        for ( int i = 0 ; i < steps ; i++ )
         {
-            attacker.spriteRenderer.transform.localPosition += new Vector3 ( 0.02f , 0 , 0 );
+            go.transform.localPosition += new Vector3 ( distance / steps , 0 , 0 ) * -go.transform.localScale.x;
             yield return null;
         }
     }
@@ -322,6 +343,7 @@ public class BattleController : MonoBehaviour
 
     IEnumerator killUnit ( Creature c )
     {
+        c.isdying = true;
         try { playerUnits.Remove ( c ); }
         catch { }
         try { opponentUnits.Remove ( c ); }

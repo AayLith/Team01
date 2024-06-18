@@ -26,6 +26,15 @@ public class Creature : MonoBehaviour
     public Creature target;
     public int targetRange;
     public BattleZone zone;
+    public bool isdying = false;
+
+    [Header ( "Animations" )]
+    public GameObject attackCast;
+    public GameObject attackProjectile;
+    public float projectileSpeed = 100;
+    public GameObject attackHit;
+    public GameObject selfhit;
+    public float attackDamageDelay = 0;
 
     private void Update ()
     {
