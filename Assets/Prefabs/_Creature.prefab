@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2733589463088199768}
   - component: {fileID: 3842559721067903334}
   - component: {fileID: -6466456392751367355}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: _Creature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32,6 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3207812076309956950}
+  - {fileID: 5559629623017742719}
   - {fileID: 3742314581464181687}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -47,28 +48,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a30803b3262354782dbbdc7c5f5380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  description: 
   spriteRenderer: {fileID: 8323937401070331583}
+  spriteAnim: {fileID: 0}
   health: 0
   curhealth: 0
-  meleeDmg: 0
-  rangedDmg: 0
-  atkRange: 1
+  attack: {fileID: 0}
   abilities: []
+  synergy: {fileID: 0}
   preferedRange: 1
   healthbar: {fileID: 4669083337477958993}
-  healthWidth: 50
-  healthHeight: 7
+  healthWidth: 40
+  healthHeight: 5
   healthOffset: -10
-  target: {fileID: 0}
-  targetRange: 0
   zone: {fileID: 0}
   isdying: 0
-  attackCast: {fileID: 0}
-  attackProjectile: {fileID: 0}
-  projectileSpeed: 100
-  attackHit: {fileID: 0}
-  selfhit: {fileID: 0}
-  attackDamageDelay: 0
 --- !u!54 &-6466456392751367355
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -108,7 +102,7 @@ GameObject:
   - component: {fileID: 8323937401070331583}
   - component: {fileID: 5893976158751226771}
   - component: {fileID: 148573846535341531}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -171,15 +165,15 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 0.16, y: 0.16}
+  m_Size: {x: 0.5, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &5893976158751226771
@@ -237,10 +231,10 @@ BoxCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.08}
   m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
+    border: {x: 0.049999997, y: 0.049999997, z: 0.049999997, w: 0.049999997}
+    pivot: {x: 0.5, y: 0.5}
     oldSize: {x: 0.16, y: 0.16}
-    newSize: {x: 0.16, y: 0.16}
+    newSize: {x: 0.5, y: 0.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -260,7 +254,7 @@ GameObject:
   - component: {fileID: 5946950313725609522}
   - component: {fileID: 2008401155059852458}
   - component: {fileID: 5280169823068525494}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -361,7 +355,7 @@ GameObject:
   - component: {fileID: 8626570919180216797}
   - component: {fileID: 4576424345412707911}
   - component: {fileID: 4669083337477958993}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -388,7 +382,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 50, y: 7}
+  m_SizeDelta: {x: 40, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4576424345412707911
 MonoBehaviour:
@@ -466,7 +460,7 @@ GameObject:
   - component: {fileID: 2862472748331267426}
   - component: {fileID: 2334511178437655083}
   - component: {fileID: 2411817592316637306}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -530,6 +524,59 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 5
+--- !u!1 &4041296940277299746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5559629623017742719}
+  - component: {fileID: 2857678428008962594}
+  m_Layer: 11
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5559629623017742719
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4041296940277299746}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2733589463088199768}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!65 &2857678428008962594
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4041296940277299746}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.16, y: 0.16, z: 0.05}
+  m_Center: {x: 0, y: 0.05, z: 0}
 --- !u!1 &4590538259979419366
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +588,7 @@ GameObject:
   - component: {fileID: 6452665229178964074}
   - component: {fileID: 1037597795340310550}
   - component: {fileID: 3498253851741584500}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -616,7 +663,7 @@ GameObject:
   - component: {fileID: 3963952314330151511}
   - component: {fileID: 8175513909479427182}
   - component: {fileID: 2245006885875413679}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -689,7 +736,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3486931973583205134}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Handle Slide Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -725,7 +772,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6924666372425000697}
-  m_Layer: 5
+  m_Layer: 11
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}

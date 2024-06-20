@@ -110,4 +110,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: ef13741633e294541beff918626d1985, type: 3}
   - {fileID: 21300000, guid: 71886cc3cb144894188250046b9861bb, type: 3}
   speed: 10
-  repeats: 1
+  repeats: 100

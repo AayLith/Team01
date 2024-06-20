@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1882441849565320234}
   - component: {fileID: 4960517964643964646}
   m_Layer: 0
-  m_Name: Smoke Explosion
+  m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7b270ab2903092743932f13c5f6f1872, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -98,18 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   render: {fileID: 1882441849565320234}
-  sprites:
-  - {fileID: 21300000, guid: 43c292d59a6ec134c83a64ede5ef57d7, type: 3}
-  - {fileID: 21300000, guid: 34ccf34e7f6fe93489da3b6e9df91ad8, type: 3}
-  - {fileID: 21300000, guid: 1e2535a81cea9174f884936eeaa9ad5b, type: 3}
-  - {fileID: 21300000, guid: 56670a43a7c42ae4d93285c8216c0414, type: 3}
-  - {fileID: 21300000, guid: 5a6611d15e8172741ade34f6df68c025, type: 3}
-  - {fileID: 21300000, guid: e3384527dd99c414285f3df4c247f055, type: 3}
-  - {fileID: 21300000, guid: 844d8f11efe736740960405fc565eb2c, type: 3}
-  - {fileID: 21300000, guid: 720b3edc110c01646859945149b74f39, type: 3}
-  - {fileID: 21300000, guid: 1dd0e1c20c0afa8409e579e6af56e477, type: 3}
-  - {fileID: 21300000, guid: 9b49818c177918646943974bebec3e14, type: 3}
-  - {fileID: 21300000, guid: 8dbced1d586a6b24b91ccf469a101ef1, type: 3}
-  - {fileID: 21300000, guid: 084cf4b4a55f8d64d94c4f77e65478df, type: 3}
-  speed: 20
-  repeats: 1
+  sprites: []
+  speed: 1
+  repeats: 100
