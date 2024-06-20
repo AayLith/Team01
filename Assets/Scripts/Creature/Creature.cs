@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Creature : MonoBehaviour
 {
+    [Header ( "Autobuilder" )]
+    public int cost;
+    public int incrementalCost;
+
+    [Header ("Stats")]
     [TextArea ( 3 , 10 )]
     public string description;
-    public SpriteRenderer spriteRenderer;
-    public SpriteRenderer spriteAnim;
     [Min ( 1 )]
     public int health = 2;
     public int curhealth = 2;
@@ -15,9 +18,13 @@ public class Creature : MonoBehaviour
     public Ability[] abilities;
     public Synergy synergy;
 
+    [Header("GameObjects")]
+    public SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteAnim;
+    public Healthbar healthbar;
+
     [Header ( "Battle" )]
     public int preferedRange = 1;
-    public Healthbar healthbar;
     public int healthWidth = 50;
     public int healthHeight = 7;
     public int healthOffset = -10;
