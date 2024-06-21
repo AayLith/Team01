@@ -412,6 +412,7 @@ public class BattleController : MonoBehaviour
         return zone;
     }
 
+    // True if the unit should belong to the player, false if it belongs to the opponent
     public void addUnit ( Creature c , bool playerSide )
     {
         if ( playerSide )
