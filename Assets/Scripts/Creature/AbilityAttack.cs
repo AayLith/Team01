@@ -30,6 +30,9 @@ public class AbilityAttack : Ability
         // Choose a target at random
         targets.Add ( _targets.getRandomElement () );
         targetRange = caster.zone.range + _targets[ 0 ].zone.range;
+
+        Debug.Log ( ennemyZones[ 0 ] );
+        Debug.Log ( targets[ 0 ] );
     }
 
     protected override IEnumerator animationFirstPart ()
