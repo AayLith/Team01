@@ -23,6 +23,7 @@ public class Creature : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer spriteAnim;
     public Healthbar healthbar;
+    //public Outline outline;
 
     [Header ( "Battle" )]
     public int preferedRange = 1;
@@ -42,6 +43,7 @@ public class Creature : MonoBehaviour
         healthbar.init ( curhealth , health , healthWidth , healthHeight , healthOffset );
         Destroy ( spriteRenderer.gameObject );
         spriteRenderer = Instantiate ( spriteAnim.gameObject , transform.position , Quaternion.Euler ( -90 , 0 , 0 ) , transform ).GetComponent<SpriteRenderer> ();
+        //outline = spriteRenderer.gameObject.AddComponent<Outline> ();
         if ( zone )
             spriteRenderer.transform.localScale = Vector3.Scale ( spriteRenderer.transform.localScale , new Vector3 ( zone.X_Scale , 1 , 1 ) );
         for ( int i = 0 ; i < abilities.Length ; i++ )

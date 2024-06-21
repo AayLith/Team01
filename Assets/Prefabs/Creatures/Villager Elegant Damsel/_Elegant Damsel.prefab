@@ -64,6 +64,14 @@ PrefabInstance:
       propertyPath: spriteAnim
       value: 
       objectReference: {fileID: 3626916397498700004, guid: 9d844a75a411150489bb8e6927f43cc0, type: 3}
+    - target: {fileID: 6041375373716306080, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: outlineColor.g
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 6041375373716306080, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: outlineColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

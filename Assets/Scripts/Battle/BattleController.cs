@@ -81,16 +81,7 @@ public class BattleController : MonoBehaviour
 
             // Place creatures inside their prefered zones
             // Chose the best zone
-            BattleZone zone = opponentZones[ 0 ];
-            foreach ( BattleZone bz in opponentZones )
-                if ( bz.range == c.preferedRange )
-                {
-                    zone = bz;
-                    break;
-                }
-                else if ( bz.range > zone.range && bz.range <= c.preferedRange )
-                    zone = bz;
-            moveUnitToZone ( zone , c );
+            moveUnitToZone ( getPreferedZone ( c ) , c );
         }
 
         foreach ( Creature c in player )
@@ -355,6 +346,9 @@ public class BattleController : MonoBehaviour
     {
         if ( hoverUnit != null && c == hoverUnit ) return;
 
+        //if ( hoverUnit )
+        //  hoverUnit.outline.enabled = false;
+
         if ( c == null )
         {
             hoverUnit = null;
@@ -362,6 +356,7 @@ public class BattleController : MonoBehaviour
         else
         {
             hoverUnit = c;
+            //hoverUnit.outline.enabled = true;
         }
     }
 
@@ -401,5 +396,27 @@ public class BattleController : MonoBehaviour
         else
             unit.transform.position = pos;
         zone.addCreature ( unit );
+    }
+
+    BattleZone getPreferedZone ( Creature c )
+    {
+        BattleZone zone = opponentZones[ 0 ];
+        foreach ( BattleZone bz in opponentZones )
+            if ( bz.range == c.preferedRange )
+            {
+                zone = bz;
+                break;
+            }
+            else if ( bz.range > zone.range && bz.range <= c.preferedRange )
+                zone = bz;
+        return zone;
+    }
+
+    public void addUnit ( Creature c , bool playerSide )
+    {
+        if ( playerSide )
+            playerReserve.addCreature ( c );
+        else
+            moveUnitToZone ( getPreferedZone ( c ) , c );
     }
 }

@@ -76,6 +76,14 @@ PrefabInstance:
       propertyPath: abilities.Array.data[0]
       value: 
       objectReference: {fileID: 3041528543323086696, guid: 886958db1fe417b43ae7f83f7675c81d, type: 3}
+    - target: {fileID: 6041375373716306080, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: outlineColor.g
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 6041375373716306080, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: outlineColor.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
