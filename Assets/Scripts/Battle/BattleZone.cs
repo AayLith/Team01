@@ -22,6 +22,9 @@ public class BattleZone : MonoBehaviour
             c.zone.removeCreature ( c );
         c.zone = this;
         creatures.Add ( c );
+
+        c.spriteRenderer.transform.localScale = Vector3.Scale ( new Vector3 ( Mathf.Sign ( c.spriteRenderer.transform.localScale.x ) * c.spriteRenderer.transform.localScale.x , c.spriteRenderer.transform.localScale.y , c.spriteRenderer.transform.localScale.z ) , new Vector3 ( X_Scale , 1 , 1 ) );
+        c.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( -90 , 0 , 0 ) );
     }
 
     public void removeCreature ( Creature c )

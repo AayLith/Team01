@@ -90,8 +90,6 @@ public class BattleController : MonoBehaviour
                 }
                 else if ( bz.range > zone.range && bz.range <= c.preferedRange )
                     zone = bz;
-            c.spriteRenderer.transform.localScale = Vector3.Scale ( c.spriteRenderer.transform.localScale , new Vector3 ( zone.X_Scale , 1 , 1 ) );
-            c.spriteRenderer.transform.localScale = new Vector3 ( -1 , 1 , 1 );
             moveUnitToZone ( zone , c );
         }
 
@@ -133,11 +131,12 @@ public class BattleController : MonoBehaviour
                     moveUnitToZone ( hoverZone , currentUnit , mouseWorldPos );
                 else
                     moveUnitToZone ( playerReserve , currentUnit );
+                currentUnit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( currentUnit.spriteRenderer.transform.rotation.eulerAngles.x , 0 , 0 ) );
             }
 
             // If R-click on a player creature, return it to the reserve
             else if ( Input.GetAxis ( "Fire2" ) != 0 && currentUnit != null )
-                moveUnitToZone ( hoverZone , currentUnit );
+                moveUnitToZone ( playerReserve , currentUnit );
 
             yield return null;
         }
@@ -154,14 +153,19 @@ public class BattleController : MonoBehaviour
     {
         opponentUnits = new List<Creature> ();
         foreach ( BattleZone bz in opponentZones )
+            opponentUnits.AddRange ( bz.creatures );
+    }
+
+    void gatherPlayerUnits ()
+    {
+        playerUnits = new List<Creature> ();
+        foreach ( BattleZone bz in playerZones )
             playerUnits.AddRange ( bz.creatures );
     }
 
     IEnumerator battleActing ()
     {
-        playerUnits = new List<Creature> ();
-        foreach ( BattleZone bz in playerZones )
-            playerUnits.AddRange ( bz.creatures );
+        gatherPlayerUnits ();
         gatherOpponentUnits ();
 
         //////////////////////////////////////////////////////////////////////////////
@@ -192,58 +196,6 @@ public class BattleController : MonoBehaviour
             creatures.AddRange ( opponentUnits );
             // Shuffle the list
             creatures = creatures.shuffle ();
-            // Set targets
-            /*
-            foreach ( BattleZone plz in playerZones )
-                foreach ( Creature attacker in plz.creatures )
-                {
-                    int range = 0;
-                    List<Creature> targets = new List<Creature> ();
-                    // Gather all units in range
-                    foreach ( BattleZone opz in opponentZones )
-                        if ( plz.range + opz.range - 1 <= attacker.atkRange )
-                        {
-                            targets.AddRange ( opz.creatures );
-                            range = plz.range + opz.range - 1;
-                        }
-                    // Choose a target at random
-                    if ( targets.Count > 0 )
-                    {
-                        attacker.target = targets[ Random.Range ( 0 , targets.Count ) ];
-                        attacker.targetRange = range;
-                    }
-                }
-            foreach ( BattleZone plz in opponentZones )
-                foreach ( Creature attacker in plz.creatures )
-                {
-                    int range = 0;
-                    List<Creature> targets = new List<Creature> ();
-                    // Gather all units in range
-                    foreach ( BattleZone opz in playerZones )
-                        if ( plz.range + opz.range - 1 <= attacker.atkRange )
-                        {
-                            targets.AddRange ( opz.creatures );
-                            range = plz.range + opz.range - 1;
-                        }
-                    // Choose a target at random
-                    if ( targets.Count > 0 )
-                    {
-                        attacker.target = targets[ Random.Range ( 0 , targets.Count ) ];
-                        attacker.targetRange = range;
-                    }
-                }
-            */
-            // Attacks and Abilities
-            /*
-            foreach ( Creature attacker in creatures )
-                if ( attacker.target != null )
-                    yield return StartCoroutine ( attack ( attacker , attacker.target ) );
-            */
-            // Remove targets
-            /*
-            foreach ( Creature attacker in creatures )
-                attacker.target = null;
-            */
 
             // End of turn
             // Some abilities and things happens here
@@ -266,11 +218,11 @@ public class BattleController : MonoBehaviour
             if ( pz.creatures.Count == 0 )
                 for ( int j = 1 ; j < playerZones.Count ; j++ )
                     foreach ( Creature c in playerZones[ j ].creatures )
-                        StartCoroutine ( walkUnit ( c , c.transform.position + new Vector3 ( 0.3f , 0 , 0 ) ) );
+                        StartCoroutine ( walkUnit ( c , c.transform.position + new Vector3 ( 0.55f , 0 , 0 ) , pz ) );
             if ( oz.creatures.Count == 0 )
                 for ( int j = 1 ; j < opponentUnits.Count ; j++ )
                     foreach ( Creature c in opponentZones[ j ].creatures )
-                        StartCoroutine ( walkUnit ( c , c.transform.position + new Vector3 ( -0.3f , 0 , 0 ) ) );
+                        StartCoroutine ( walkUnit ( c , c.transform.position + new Vector3 ( -0.55f , 0 , 0 ) , oz ) );
             while ( movingUnits > 0 )
                 yield return null;
 
@@ -300,7 +252,7 @@ public class BattleController : MonoBehaviour
                 if ( a.trigger == trigger )
                 {
                     allAbilities.Add ( a );
-                    a.setTargets ( playerZones , opponentZones );
+                    a.setTargets ( opponentZones , playerZones );
                 }
 
         allAbilities.shuffle ();
@@ -332,19 +284,24 @@ public class BattleController : MonoBehaviour
             yield return StartCoroutine ( a.execute () );
     }
 
-    IEnumerator walkUnit ( Creature c , Vector3 pos )
+    IEnumerator walkUnit ( Creature c , Vector3 pos , BattleZone z )
     {
         movingUnits++;
         float elapsedTime = 0f;
         // Walk animation
         while ( c.transform.position != pos )
         {
-            c.transform.position = Vector3.MoveTowards ( c.transform.position , pos , 0.1f );
-            c.spriteRenderer.transform.localPosition = new Vector3 ( 0 , 1 , 0 ) * Mathf.Abs ( Mathf.Sin ( elapsedTime * Mathf.PI ) );
+            c.transform.position = Vector3.MoveTowards ( c.transform.position , pos , 0.025f );
+            c.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 (
+                c.spriteRenderer.transform.rotation.eulerAngles.x ,
+                c.spriteRenderer.transform.rotation.eulerAngles.y ,
+                Mathf.Sin ( elapsedTime * 20 ) * 25 ) );
             elapsedTime += Time.deltaTime;
             yield return null;
         }
+        c.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( c.spriteRenderer.transform.rotation.eulerAngles.x , 0 , 0 ) );
         movingUnits--;
+        moveUnitToZone ( z , c , pos );
     }
 
     BattleZone getZone ( char side , int range )
@@ -443,9 +400,6 @@ public class BattleController : MonoBehaviour
             unit.transform.position = zone.getRandomPos ();
         else
             unit.transform.position = pos;
-
-        unit.spriteRenderer.transform.localScale = Vector3.Scale ( new Vector3 ( Mathf.Sign ( unit.spriteRenderer.transform.localScale.x ) * unit.spriteRenderer.transform.localScale.x , unit.spriteRenderer.transform.localScale.y , unit.spriteRenderer.transform.localScale.z ) , new Vector3 ( zone.X_Scale , 1 , 1 ) );
-        unit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( -90 , 0 , 0 ) );
         zone.addCreature ( unit );
     }
 }

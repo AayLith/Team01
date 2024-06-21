@@ -7,6 +7,7 @@ public class Creature : MonoBehaviour
     [Header ( "Autobuilder" )]
     public int cost;
     public int incrementalCost;
+    public bool boss = false;
 
     [Header ("Stats")]
     [TextArea ( 3 , 10 )]
