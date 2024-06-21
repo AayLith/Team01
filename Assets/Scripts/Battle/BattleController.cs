@@ -90,8 +90,6 @@ public class BattleController : MonoBehaviour
                 }
                 else if ( bz.range > zone.range && bz.range <= c.preferedRange )
                     zone = bz;
-            c.spriteRenderer.transform.localScale = Vector3.Scale ( c.spriteRenderer.transform.localScale , new Vector3 ( zone.X_Scale , 1 , 1 ) );
-            c.spriteRenderer.transform.localScale = new Vector3 ( -1 , 1 , 1 );
             moveUnitToZone ( zone , c );
         }
 
@@ -443,9 +441,6 @@ public class BattleController : MonoBehaviour
             unit.transform.position = zone.getRandomPos ();
         else
             unit.transform.position = pos;
-
-        unit.spriteRenderer.transform.localScale = Vector3.Scale ( new Vector3 ( Mathf.Sign ( unit.spriteRenderer.transform.localScale.x ) * unit.spriteRenderer.transform.localScale.x , unit.spriteRenderer.transform.localScale.y , unit.spriteRenderer.transform.localScale.z ) , new Vector3 ( zone.X_Scale , 1 , 1 ) );
-        unit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( -90 , 0 , 0 ) );
         zone.addCreature ( unit );
     }
 }
