@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7604861735761169954}
-  - component: {fileID: 1755330019172124355}
   - component: {fileID: 109292825532564195}
+  - component: {fileID: 2547492183533675427}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -33,29 +33,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1755330019172124355
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8613325792751462723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f70be9500be71bb40b4fbb60fd5c7fd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueWidget: {fileID: 0}
-  dialogueText: {fileID: 0}
-  dialogueSpeaker: {fileID: 0}
-  branchLayoutPanel: {fileID: 0}
-  branchPrefab: {fileID: 5920646552992161666, guid: d76bc293dfbfabc4bb267ab9ff130714, type: 3}
-  closePrefab: {fileID: 8640544870548506012, guid: 419fbc8c8774ad940b03b122cb80e070, type: 3}
-  icon1: {fileID: 0}
-  icon2: {fileID: 0}
-  diagSound: {fileID: 0}
-  diagFast: 0
-  diagActive: 0
 --- !u!114 &109292825532564195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -81,3 +58,26 @@ MonoBehaviour:
   ignoreInvalidBranches: 1
   continuouslyRecalculateBranches: 0
   continouslyRecalculateInterval: 1
+--- !u!114 &2547492183533675427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8613325792751462723}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f70be9500be71bb40b4fbb60fd5c7fd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueWidget: {fileID: 0}
+  dialogueText: {fileID: 0}
+  dialogueSpeaker: {fileID: 0}
+  branchLayoutPanel: {fileID: 0}
+  branchPrefab: {fileID: 0}
+  closePrefab: {fileID: 0}
+  icon1: {fileID: 0}
+  icon2: {fileID: 0}
+  diagSound: {fileID: 0}
+  diagFast: 0
+  diagActive: 0

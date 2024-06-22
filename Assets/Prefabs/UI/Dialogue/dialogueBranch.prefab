@@ -88,9 +88,9 @@ GameObject:
   - component: {fileID: 4782109701834309069}
   - component: {fileID: 8098232500068743897}
   - component: {fileID: 4830531055565222620}
-  - component: {fileID: 2487178120762720605}
   - component: {fileID: 6791522331498658463}
   - component: {fileID: 5623740978042020616}
+  - component: {fileID: 1329781294981982131}
   m_Layer: 5
   m_Name: dialogueBranch
   m_TagString: Untagged
@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2487178120762720605}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: BranchChoice, Assembly-CSharp
         m_MethodName: OnBranchSelected
         m_Mode: 1
@@ -234,22 +234,6 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &2487178120762720605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5920646552992161666}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af160a8fb31795f438d45435de1979fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  buttonText: {fileID: 2538981395247372605}
-  diagSkip: 0
-  diagManager: {fileID: 0}
-  nextButton: {fileID: 0}
 --- !u!114 &6791522331498658463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +291,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 096b47916bfd9634c8b567cc55c413ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1329781294981982131
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5920646552992161666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af160a8fb31795f438d45435de1979fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonText: {fileID: 2538981395247372605}
+  diagSkip: 0
+  diagManager: {fileID: 0}
+  nextButton: {fileID: 0}
 --- !u!1 &6487458197335094604
 GameObject:
   m_ObjectHideFlags: 0

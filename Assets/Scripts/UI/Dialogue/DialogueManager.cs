@@ -22,6 +22,7 @@ public class DialogueManager : MonoBehaviour, IArticyFlowPlayerCallbacks
     [SerializeField] AudioSource diagSound;
 
 
+
     //is the ui interface on?
     public bool DialogueActive { get; set; }
     [SerializeField] public bool diagFast = false;

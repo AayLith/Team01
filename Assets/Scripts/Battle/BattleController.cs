@@ -72,6 +72,7 @@ public class BattleController : MonoBehaviour
     public void startBattlePreparation ( List<Creature> player , List<Creature> opponent )
     {
         playerUnits.Clear ();
+        //playerUnits = player;
         opponentUnits = opponent;
         currentPhase = battlePhases.preparation;
 

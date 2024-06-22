@@ -16,7 +16,7 @@ public class BranchChoice : MonoBehaviour
     void Awake()
     {
         diagManager = GameObject.Find("DialogueManager");
-        nextButton = GameObject.Find("DialogueBranches");
+        nextButton = GameObject.Find("DialogueBranches"); 
     }
 
     void Update()
