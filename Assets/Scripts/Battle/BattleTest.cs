@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class BattleTest : MonoBehaviour
 {
+    public int budget;
     public List<Creature> playerUnits = new List<Creature> ();
     public List<Creature> opponentUnits = new List<Creature> ();
-    public int budget;
 
     private void Start ()
     {
