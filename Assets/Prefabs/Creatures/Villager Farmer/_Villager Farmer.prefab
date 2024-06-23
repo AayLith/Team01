@@ -53,6 +53,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: cost
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: attack
       value: 
       objectReference: {fileID: 6091493493991426759, guid: 500fb565075374e40964078cee22bf56, type: 3}
@@ -63,6 +67,10 @@ PrefabInstance:
     - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: curhealth
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: popularity
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: spriteAnim

@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArmyBuilder
+public static class ArmyBuilder
 {
-    public List<Creature> buildArmy ( List<Creature> availableUnits , int budget , bool enforceBoss )
+    public static Dictionary<Creature , int> buildArmy ( List<Creature> availableUnits , int budget , bool enforceBoss )
     {
-        List<Creature> army = new List<Creature> ();
+        Dictionary<Creature , int> army = new Dictionary<Creature , int> ();
         List<Creature> bosses = new List<Creature> ();
         Creature current;
 
@@ -22,31 +22,47 @@ public class ArmyBuilder
         {
             if ( bosses.Count > 0 )
             {
-                army.Add ( bosses.getRandomElement () );
-                budget -= army[ 0 ].cost;
+                current = bosses.getRandomElement ();
+                army.Add ( current , 1 );
+                budget -= current.cost;
             }
         }
+
+        // Make units popular !
+        for ( int i = availableUnits.Count - 1 ; i != -1 ; i-- )
+            if ( availableUnits[ i ].popularity > 0 )
+                for ( int j = 0 ; j < availableUnits[ i ].popularity ; j++ )
+                    availableUnits.Add ( availableUnits[ i ] );
 
         // Add regular units
         while ( availableUnits.Count > 0 )
         {
             // Get a random unit and add to the army
             current = availableUnits.getRandomElement ();
-            if ( !addUnitToArmy ( current , army , budget ) )
+            if ( !addUnitToArmy ( current , budget ) )
                 break;
-            budget -= current.cost;
-
+            else
+            {
+                if ( army.ContainsKey ( current ) )
+                    army[ current ]++;
+                else
+                    army.Add ( current , 1 );
+                budget -= ( current.cost + army[ current ] * current.incrementalCost );
+            }
             // Remove units that cost too much
-            for ( int i = availableUnits.Count - 1 ; i != 0 ; i-- )
+            for ( int i = availableUnits.Count - 1 ; i != -1 ; i-- )
                 if ( availableUnits[ i ].cost > budget )
                     availableUnits.RemoveAt ( i );
+
+            if ( army.Count > 1000 )
+                break;
         }
 
         return army;
     }
 
     // Add a unit to the army if we have enough budget
-    bool addUnitToArmy ( Creature c , List<Creature> army , int budget )
+    static bool addUnitToArmy ( Creature c , int budget )
     {
         if ( c.cost == 0 )
         {
@@ -57,7 +73,6 @@ public class ArmyBuilder
         if ( c.cost > budget )
             return true;
 
-        army.Add ( c );
         return true;
     }
 }

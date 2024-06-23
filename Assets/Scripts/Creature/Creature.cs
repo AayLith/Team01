@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class Creature : MonoBehaviour
 {
-    [Header ( "Autobuilder" )]
+    [Header ( "Army Building" )]
+    [Range ( 1 , 100 )]
     public int cost;
+    [Range ( 0 , 10 )]
     public int incrementalCost;
+    [Range ( 0 , 10 )]
+    public int popularity;
     public bool boss = false;
 
-    [Header ("Stats")]
+    [Header ( "Stats" )]
     [TextArea ( 3 , 10 )]
     public string description;
     [Min ( 1 )]
@@ -19,7 +23,7 @@ public class Creature : MonoBehaviour
     public Ability[] abilities;
     public Synergy synergy;
 
-    [Header("GameObjects")]
+    [Header ( "GameObjects" )]
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer spriteAnim;
     public Healthbar healthbar;

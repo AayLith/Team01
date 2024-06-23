@@ -71,18 +71,37 @@ public class BattleController : MonoBehaviour
 
     public void startBattlePreparation ( List<Creature> player , List<Creature> opponent )
     {
+        Dictionary<Creature , int> army = new Dictionary<Creature , int> ();
+        foreach ( Creature c in opponent )
+            if ( army.ContainsKey ( c ) )
+                army[ c ]++;
+            else
+                army.Add ( c , 1 );
+        startBattlePreparation ( player , army );
+    }
+
+    public void startBattlePreparation ( List<Creature> player , Dictionary<Creature , int> opponent )
+    {
+        // Clear everything
+        foreach ( Creature c in opponentUnits )
+            Destroy ( c.gameObject );
         playerUnits.Clear ();
-        //playerUnits = player;
-        opponentUnits = opponent;
+        opponentUnits.Clear ();
         currentPhase = battlePhases.preparation;
 
-        foreach ( Creature c in opponentUnits )
+        foreach ( KeyValuePair<Creature , int> kvp in opponent )
         {
+            Creature c;
             // TODO Instanciate creatures
-
-            // Place creatures inside their prefered zones
-            // Chose the best zone
-            moveUnitToZone ( getPreferedZone ( c ) , c );
+            for ( int i = 0 ; i < kvp.Value ; i++ )
+            {
+                c = Instantiate ( kvp.Key.gameObject ).GetComponent<Creature> ();
+                // Place creatures inside their prefered zones
+                moveUnitToZone ( getPreferedZone ( c ) , c );
+                opponentUnits.Add ( c );
+                if ( opponentUnits.Count > 1000 )
+                    break;
+            }
         }
 
         foreach ( Creature c in player )
