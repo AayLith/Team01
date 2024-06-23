@@ -10,11 +10,13 @@ public class AbilitySummon : Ability
     public enum modes { self_zone, random_zone, zone1, zone2, zone3 }
     public modes mode;
     BattleZone bzTarget;
+    Transform parent;
 
     public override void setTargets ( List<BattleZone> allyZones , List<BattleZone> ennemyZones , Creature _caster = null )
     {
         targets.Clear ();
         targets.Add ( caster );
+        this.parent = parent;
 
         switch ( mode )
         {
@@ -56,7 +58,7 @@ public class AbilitySummon : Ability
             yield return StartCoroutine ( attackWindown ( pos ) );
 
             // Invocation
-            Creature c = Instantiate ( summon.gameObject , pos , summon.transform.rotation ).GetComponent<Creature> ();
+            Creature c = Instantiate ( summon.gameObject , pos , summon.transform.rotation , caster.transform.parent ).GetComponent<Creature> ();
             bzTarget.addCreature ( c );
 
             yield return new WaitForSeconds ( 0.1f );

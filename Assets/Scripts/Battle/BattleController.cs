@@ -9,9 +9,17 @@ public class BattleController : MonoBehaviour
     public static BattleController instance;
 
     [Header ( "GameObjects" )]
+    public GameObject battlefieldObj;
+    public GameObject playerUnitsObj;
+    public GameObject opponentUnitsObj;
     public GameObject groundPlane;
     public GameObject startButton;
     public TMP_Text battleText;
+
+    [Header ( "UI" )]
+    public CanvasGroup lootGroup;
+    public TMP_Text lootText;
+    public TMP_Text populationText;
 
     [Header ( "Zones" )]
     public List<Creature> playerUnits = new List<Creature> ();
@@ -32,10 +40,9 @@ public class BattleController : MonoBehaviour
     public Vector3 mouseWorldPos;
 
 
-
     // Private stuff
     int movingUnits = 0;
-
+    int loot = 0;
 
     private void Awake ()
     {
@@ -82,9 +89,8 @@ public class BattleController : MonoBehaviour
 
     public void startBattlePreparation ( List<Creature> player , Dictionary<Creature , int> opponent )
     {
-        // Clear everything
-        foreach ( Creature c in opponentUnits )
-            Destroy ( c.gameObject );
+        // Clear some stuff
+        loot = 0;
         playerUnits.Clear ();
         opponentUnits.Clear ();
         currentPhase = battlePhases.preparation;
@@ -95,7 +101,7 @@ public class BattleController : MonoBehaviour
             // TODO Instanciate creatures
             for ( int i = 0 ; i < kvp.Value ; i++ )
             {
-                c = Instantiate ( kvp.Key.gameObject ).GetComponent<Creature> ();
+                c = Instantiate ( kvp.Key.gameObject , opponentUnitsObj.transform ).GetComponent<Creature> ();
                 // Place creatures inside their prefered zones
                 moveUnitToZone ( getPreferedZone ( c ) , c );
                 opponentUnits.Add ( c );
@@ -112,7 +118,9 @@ public class BattleController : MonoBehaviour
             moveUnitToZone ( playerReserve , c );
         }
 
-
+        battlefieldObj.SetActive ( true );
+        playerUnitsObj.SetActive ( true );
+        opponentUnitsObj.SetActive ( true );
         StartCoroutine ( battlePreparation () );
     }
 
@@ -189,6 +197,9 @@ public class BattleController : MonoBehaviour
         // During battle
         for ( int i = 0 ; i < 3 ; i++ )
         {
+            gatherPlayerUnits ();
+            gatherOpponentUnits ();
+
             // Start of turn
             // Some abilities and things happens here
             battleText.text = "Turn " + ( i + 1 ) + " Start";
@@ -197,7 +208,6 @@ public class BattleController : MonoBehaviour
 
             // Turn execution
             // Make units attack and cast their abilities
-            gatherOpponentUnits ();
             battleText.text = "Turn " + ( i + 1 ) + " Execution";
             yield return StartCoroutine ( executeAbilities ( Ability.triggers.turn ) );
             yield return StartCoroutine ( executeAttacks () );
@@ -214,13 +224,12 @@ public class BattleController : MonoBehaviour
             battleText.text = "Turn " + ( i + 1 ) + " End";
             foreach ( Creature c in creatures )
                 if ( c.curhealth > c.health ) c.curhealth = c.health;
-                else if ( c.curhealth <= 0 && !c.isdying )
+                else if ( c.curhealth <= 0 && !c.isDead )
                 {
                     StartCoroutine ( killUnit ( c ) );
                     yield return new WaitForSeconds ( 0.05f );
                 }
 
-            gatherOpponentUnits ();
             yield return StartCoroutine ( executeAbilities ( Ability.triggers.turnEnd ) );
 
             // Move units forward if zone 1 is empty
@@ -245,6 +254,8 @@ public class BattleController : MonoBehaviour
         // After battle
         // Some abilities and things happens here
         yield return StartCoroutine ( executeAbilities ( Ability.triggers.battleEnd ) );
+
+        endBattle ();
     }
 
     IEnumerator executeAbilities ( Ability.triggers trigger )
@@ -252,19 +263,23 @@ public class BattleController : MonoBehaviour
         List<Ability> allAbilities = new List<Ability> ();
 
         foreach ( Creature c in playerUnits )
-            foreach ( Ability a in c.abilities )
-                if ( a.trigger == trigger )
-                {
-                    allAbilities.Add ( a );
-                    a.setTargets ( playerZones , opponentZones );
-                }
+            if ( c.isDead ) continue;
+            else
+                foreach ( Ability a in c.abilities )
+                    if ( a.trigger == trigger )
+                    {
+                        allAbilities.Add ( a );
+                        a.setTargets ( playerZones , opponentZones );
+                    }
         foreach ( Creature c in opponentUnits )
-            foreach ( Ability a in c.abilities )
-                if ( a.trigger == trigger )
-                {
-                    allAbilities.Add ( a );
-                    a.setTargets ( opponentZones , playerZones );
-                }
+            if ( c.isDead ) continue;
+            else
+                foreach ( Ability a in c.abilities )
+                    if ( a.trigger == trigger )
+                    {
+                        allAbilities.Add ( a );
+                        a.setTargets ( opponentZones , playerZones );
+                    }
 
         allAbilities.shuffle ();
         foreach ( Ability a in allAbilities )
@@ -277,14 +292,14 @@ public class BattleController : MonoBehaviour
 
         foreach ( Creature c in playerUnits )
         {
-            if ( c.attack == null )
+            if ( c.isDead || c.attack == null )
                 continue;
             allAbilities.Add ( c.attack );
             c.attack.setTargets ( playerZones , opponentZones );
         }
         foreach ( Creature c in opponentUnits )
         {
-            if ( c.attack == null )
+            if ( c.isDead || c.attack == null )
                 continue;
             allAbilities.Add ( c.attack );
             c.attack.setTargets ( opponentZones , playerZones );
@@ -315,31 +330,10 @@ public class BattleController : MonoBehaviour
         moveUnitToZone ( z , c , pos );
     }
 
-    BattleZone getZone ( char side , int range )
-    {
-        if ( side == 'p' )
-        {
-            foreach ( BattleZone bz in playerZones )
-                if ( bz.range == range )
-                    return bz;
-        }
-        else
-        {
-            foreach ( BattleZone bz in opponentZones )
-                if ( bz.range == range )
-                    return bz;
-        }
-        return null;
-    }
-
     IEnumerator killUnit ( Creature c )
     {
-        c.isdying = true;
-        c.zone.removeCreature ( c );
-        try { playerUnits.Remove ( c ); }
-        catch { }
-        try { opponentUnits.Remove ( c ); }
-        catch { }
+        c.isDead = true;
+        loot += c.loot;
 
         // Death animation
         for ( int i = 1 ; i < 7 ; i++ )
@@ -351,7 +345,97 @@ public class BattleController : MonoBehaviour
             yield return null;
         }
 
-        Destroy ( c.gameObject );
+        Color color = c.spriteRenderer.color;
+        for ( int i = 1 ; i < 6 ; i++ )
+        {
+            color.a -= 0.1f;
+            c.spriteRenderer.color = color;
+        }
+    }
+
+    void endBattle ()
+    {
+        // Hide battle
+        battlefieldObj.SetActive ( false );
+        playerUnitsObj.SetActive ( false );
+        opponentUnitsObj.SetActive ( false );
+
+        // Open and fill in battle results
+        // Dead creatures on each sides
+        Dictionary<string , int> playerAliveUnits = new Dictionary<string , int> ();
+        Dictionary<string , int> playerDeadUnits = new Dictionary<string , int> ();
+        Dictionary<string , int> opponentAliveUnits = new Dictionary<string , int> ();
+        Dictionary<string , int> opponentDeadUnits = new Dictionary<string , int> ();
+
+        foreach ( Creature c in playerUnits )
+            if ( c.isDead )
+            {
+                if ( playerDeadUnits.ContainsKey ( c.displayName ) )
+                    playerDeadUnits[ c.displayName ]++;
+                else playerDeadUnits.Add ( c.displayName , 1 );
+            }
+            else
+            {
+                if ( playerAliveUnits.ContainsKey ( c.displayName ) )
+                    playerAliveUnits[ c.displayName ]++;
+                else playerAliveUnits.Add ( c.displayName , 1 );
+            }
+        foreach ( Creature c in opponentUnits )
+            if ( c.isDead )
+            {
+                if ( opponentDeadUnits.ContainsKey ( c.displayName ) )
+                    opponentDeadUnits[ c.displayName ]++;
+                else opponentDeadUnits.Add ( c.displayName , 1 );
+            }
+            else
+            {
+                if ( opponentAliveUnits.ContainsKey ( c.displayName ) )
+                    opponentAliveUnits[ c.displayName ]++;
+                else opponentAliveUnits.Add ( c.displayName , 1 );
+            }
+
+        // Player earnings
+        StartCoroutine ( battleLoot () );
+
+        // Destroy dead units and move player units to reserve
+        foreach ( Creature c in opponentUnits )
+            if ( c.isDead )
+                Destroy ( c.gameObject );
+        foreach ( Creature c in playerUnits )
+            if ( c.isDead )
+                Destroy ( c.gameObject );
+            else
+                moveUnitToZone ( playerReserve , c );
+    }
+
+    IEnumerator battleLoot ()
+    {
+        lootText.text = "0";
+        yield return StartCoroutine ( canvasGroupFade ( lootGroup , 0 , 1 , 1 ) );
+        float length = 3;
+        float step = loot / length;
+        float value = 0;
+
+        while ( length > 0 )
+        {
+            value += step;
+            lootText.text = "" + Mathf.FloorToInt ( value );
+            length -= Time.fixedDeltaTime;
+            yield return null;
+        }
+        lootText.text = "" + loot;
+    }
+
+    IEnumerator canvasGroupFade ( CanvasGroup group , float start , float end , float length )
+    {
+        float step = length / ( end - start );
+        while ( length > 0 )
+        {
+            group.alpha -= step;
+            length -= Time.fixedDeltaTime;
+            yield return null;
+        }
+        group.alpha = end;
     }
 
     private void updateWorldPos ()
@@ -416,6 +500,23 @@ public class BattleController : MonoBehaviour
         else
             unit.transform.position = pos;
         zone.addCreature ( unit );
+    }
+
+    BattleZone getZone ( char side , int range )
+    {
+        if ( side == 'p' )
+        {
+            foreach ( BattleZone bz in playerZones )
+                if ( bz.range == range )
+                    return bz;
+        }
+        else
+        {
+            foreach ( BattleZone bz in opponentZones )
+                if ( bz.range == range )
+                    return bz;
+        }
+        return null;
     }
 
     BattleZone getPreferedZone ( Creature c )

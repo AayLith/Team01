@@ -5,12 +5,19 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public int difficulty;
+    public static PlayerController instance;
 
+    [Min ( 0 )]
+    public int difficulty = 10;
+
+    [Min (0)]
     public int population = 20;
+    [Min ( 0 )]
     public int populationThreshold = 5;
 
+    [Min ( 0 )]
     public int resources = 20;
+    [Min ( 0 )]
     public int resourceThreshold = 5;
 
     public List<Creature> units = new List<Creature> ();
@@ -18,4 +25,9 @@ public class PlayerController : MonoBehaviour
     [Header ( "GameObjects" )]
     public Slider populationSlider;
     public Slider resourceSlider;
+
+    private void Awake ()
+    {
+        instance = this;
+    }
 }

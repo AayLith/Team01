@@ -711,8 +711,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a30803b3262354782dbbdc7c5f5380, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 0
+  cost: 1
   incrementalCost: 0
+  popularity: 0
   boss: 0
   description: 
   health: 0
@@ -720,6 +721,7 @@ MonoBehaviour:
   attack: {fileID: 0}
   abilities: []
   synergy: {fileID: 0}
+  prefab: {fileID: 703081058373834937}
   spriteRenderer: {fileID: 6937659586457920751}
   spriteAnim: {fileID: 0}
   healthbar: {fileID: 8409508073086095501}
@@ -728,7 +730,7 @@ MonoBehaviour:
   healthHeight: 5
   healthOffset: -10
   zone: {fileID: 0}
-  isdying: 0
+  isDead: 0
 --- !u!54 &1487718179357705927
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -16,6 +16,7 @@ public class Creature : MonoBehaviour
     [Header ( "Stats" )]
     [TextArea ( 3 , 10 )]
     public string description;
+    public string displayName;
     [Min ( 1 )]
     public int health = 2;
     public int curhealth = 2;
@@ -34,8 +35,10 @@ public class Creature : MonoBehaviour
     public int healthWidth = 50;
     public int healthHeight = 7;
     public int healthOffset = -10;
+    [Range ( 1 , 100 )]
+    public int loot = 0;
     public BattleZone zone;
-    public bool isdying = false;
+    public bool isDead = false;
 
     private void Update ()
     {
