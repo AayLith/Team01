@@ -21,7 +21,7 @@ public class Quest : MonoBehaviour, NotificationReceiver
 
     private void Awake ()
     {
-        
+
     }
 
     public void clicOpen ()
@@ -34,7 +34,7 @@ public class Quest : MonoBehaviour, NotificationReceiver
 
     }
 
-    public void clicOption (QuestOption option )
+    public void clicOption ( QuestOption option )
     {
 
     }
@@ -48,8 +48,8 @@ public class Quest : MonoBehaviour, NotificationReceiver
                 break;
 
             case Notification.notifications.endManagementPhase:
-                active = false;
                 clicCloseButton ();
+                active = false;
                 break;
         }
     }
