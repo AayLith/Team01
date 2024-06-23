@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public abstract class Ability : MonoBehaviour
 {
@@ -43,7 +42,10 @@ public abstract class Ability : MonoBehaviour
             yield break;
 
         // Caster windup
-        yield return StartCoroutine ( caster.animDash ( 5 , 0.025f ) );
+        //yield return StartCoroutine ( caster.animDash ( 5 , 0.025f ) );
+        caster.animator.Play ( "Windup" );
+        while ( caster.animator.isPlaying )
+            yield return null;
 
         // Cast anim
         if ( cast )
@@ -53,8 +55,12 @@ public abstract class Ability : MonoBehaviour
         }
 
         // Caster jump
-        yield return StartCoroutine ( caster.animDash ( 5 , -0.075f ) );
-        StartCoroutine ( caster.animDash ( 5 , 0.05f ) );
+        //yield return StartCoroutine ( caster.animDash ( 5 , -0.075f ) );
+        caster.animator.Play ( "Ability" );
+        while ( caster.animator.isPlaying )
+            yield return null;
+        //StartCoroutine ( caster.animDash ( 5 , 0.05f ) );
+        //caster.animator.Play ( "Windown" );
     }
 
     protected virtual IEnumerator animationSecondPart ()
@@ -79,7 +85,8 @@ public abstract class Ability : MonoBehaviour
             yield return StartCoroutine ( projectileTravel ( caster.transform.position , target ) );
 
         // Caster Windown 
-        StartCoroutine ( caster.animDash ( 5 , -0.05f ) );
+        //StartCoroutine ( caster.animDash ( 5 , -0.05f ) );
+        caster.animator.Play ( "Windown" );
 
         // Projectile hit + Target hit
         if ( hit )

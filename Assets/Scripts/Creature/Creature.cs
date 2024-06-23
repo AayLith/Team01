@@ -25,6 +25,8 @@ public class Creature : MonoBehaviour
     public Synergy synergy;
 
     [Header ( "GameObjects" )]
+    public Transform skin;
+    public Animation animator;
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer spriteAnim;
     public Healthbar healthbar;
@@ -49,7 +51,7 @@ public class Creature : MonoBehaviour
     {
         healthbar.init ( curhealth , health , healthWidth , healthHeight , healthOffset );
         Destroy ( spriteRenderer.gameObject );
-        spriteRenderer = Instantiate ( spriteAnim.gameObject , transform.position , Quaternion.Euler ( -90 , 0 , 0 ) , transform ).GetComponent<SpriteRenderer> ();
+        spriteRenderer = Instantiate ( spriteAnim.gameObject , transform.position , Quaternion.Euler ( -90 , 0 , 0 ) , skin ).GetComponent<SpriteRenderer> ();
         //outline = spriteRenderer.gameObject.AddComponent<Outline> ();
         if ( zone )
             spriteRenderer.transform.localScale = Vector3.Scale ( spriteRenderer.transform.localScale , new Vector3 ( zone.X_Scale , 1 , 1 ) );
@@ -78,13 +80,14 @@ public class Creature : MonoBehaviour
 
     IEnumerator hitAnim ()
     {
-        yield return StartCoroutine ( animDash ( 5 , 0.025f ) );
-        yield return StartCoroutine ( animDash ( 5 , -0.025f ) );
+        //   yield return StartCoroutine ( animDash ( 5 , 0.025f ) );
+        // yield return StartCoroutine ( animDash ( 5 , -0.025f ) );
+        yield return null;
     }
 
     public IEnumerator animDash ( int steps , float distance )
     {
-        for ( int i = 0 ; i < steps ; i++ )
+        for ( int i = 1 ; i < steps + 1 ; i++ )
         {
             spriteRenderer.transform.localPosition += new Vector3 ( distance / steps , 0 , 0 ) * -spriteRenderer.transform.localScale.x;
             yield return null;

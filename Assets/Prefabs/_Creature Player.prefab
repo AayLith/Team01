@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2733589463088199768}
   - component: {fileID: 3842559721067903334}
   - component: {fileID: -6466456392751367355}
+  - component: {fileID: 1882305954833388948}
   m_Layer: 10
   m_Name: _Creature Player
   m_TagString: Untagged
@@ -31,7 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3207812076309956950}
+  - {fileID: 8085366884751455529}
   - {fileID: 5559629623017742719}
   - {fileID: 3742314581464181687}
   m_Father: {fileID: 0}
@@ -53,12 +54,14 @@ MonoBehaviour:
   popularity: 0
   boss: 0
   description: 
+  displayName: 
   health: 0
   curhealth: 0
   attack: {fileID: 0}
   abilities: []
   synergy: {fileID: 0}
-  prefab: {fileID: 3842559721067903334}
+  skin: {fileID: 8085366884751455529}
+  animator: {fileID: 1882305954833388948}
   spriteRenderer: {fileID: 8323937401070331583}
   spriteAnim: {fileID: 0}
   healthbar: {fileID: 4669083337477958993}
@@ -66,8 +69,13 @@ MonoBehaviour:
   healthWidth: 40
   healthHeight: 5
   healthOffset: -10
+  loot: 1
   zone: {fileID: 0}
   isDead: 0
+  windup: {fileID: 7400000, guid: 7caa065728900154bb9760db5b6ab89c, type: 2}
+  windown: {fileID: 7400000, guid: e42d6b9ef816a4440bcce040675000f0, type: 2}
+  assault: {fileID: 7400000, guid: e6557274ec5e4d34a9be07f4fa10879c, type: 2}
+  ability: {fileID: 7400000, guid: 781215854f86d514c92bb362f4f93cb0, type: 2}
 --- !u!54 &-6466456392751367355
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -95,6 +103,57 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!111 &1882305954833388948
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 289227515945582904}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 7caa065728900154bb9760db5b6ab89c, type: 2}
+  - {fileID: 7400000, guid: e6557274ec5e4d34a9be07f4fa10879c, type: 2}
+  - {fileID: 7400000, guid: e42d6b9ef816a4440bcce040675000f0, type: 2}
+  - {fileID: 7400000, guid: 781215854f86d514c92bb362f4f93cb0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!1 &2389924551152876724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8085366884751455529}
+  m_Layer: 11
+  m_Name: Skin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8085366884751455529
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2389924551152876724}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3207812076309956950}
+  m_Father: {fileID: 2733589463088199768}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2407607869381697843
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,12 +180,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2407607869381697843}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2733589463088199768}
+  m_Father: {fileID: 8085366884751455529}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!212 &8323937401070331583
 SpriteRenderer:
@@ -314,6 +373,7 @@ GameObject:
   - component: {fileID: 8626570919180216797}
   - component: {fileID: 4576424345412707911}
   - component: {fileID: 4669083337477958993}
+  - component: {fileID: 4323776364604001155}
   m_Layer: 10
   m_Name: Slider
   m_TagString: Untagged
@@ -408,6 +468,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   verticalOffset: 0
   slider: {fileID: 4576424345412707911}
+--- !u!225 &4323776364604001155
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3307385313345862172}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &3737862417491485943
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 289227515945582904, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_Name
-      value: Chicken Creature
+      value: _Chicken
       objectReference: {fileID: 0}
     - target: {fileID: 2733589463088199768, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -67,6 +67,10 @@ PrefabInstance:
     - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: description
       value: A chicken. It does nothing but attracting attention.
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: displayName
+      value: Chicken
       objectReference: {fileID: 0}
     - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: preferedRange

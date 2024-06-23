@@ -17,13 +17,22 @@ public class BattleController : MonoBehaviour
     public TMP_Text battleText;
 
     [Header ( "UI" )]
+    public GameObject battleReport;
+    public ReportLine reportLine;
+    public Transform linesLayout;
+    public CanvasGroup bonusGroup;
     public CanvasGroup lootGroup;
+    public CanvasGroup popGroup;
+    public TMP_Text battleOutcome;
+    public TMP_Text bonusText;
     public TMP_Text lootText;
     public TMP_Text populationText;
 
     [Header ( "Zones" )]
     public List<Creature> playerUnits = new List<Creature> ();
     public List<Creature> opponentUnits = new List<Creature> ();
+    Dictionary<Creature , int> deadAllies = new Dictionary<Creature , int> ();
+    Dictionary<Creature , int> deadEnnemies = new Dictionary<Creature , int> ();
 
     public List<BattleZone> playerZones = new List<BattleZone> ();
     public List<BattleZone> opponentZones = new List<BattleZone> ();
@@ -42,7 +51,7 @@ public class BattleController : MonoBehaviour
 
     // Private stuff
     int movingUnits = 0;
-    int loot = 0;
+    int lootBonus = 0;
 
     private void Awake ()
     {
@@ -90,9 +99,11 @@ public class BattleController : MonoBehaviour
     public void startBattlePreparation ( List<Creature> player , Dictionary<Creature , int> opponent )
     {
         // Clear some stuff
-        loot = 0;
+        lootBonus = 0;
         playerUnits.Clear ();
         opponentUnits.Clear ();
+        deadAllies.Clear ();
+        deadEnnemies.Clear ();
         currentPhase = battlePhases.preparation;
 
         foreach ( KeyValuePair<Creature , int> kvp in opponent )
@@ -222,17 +233,26 @@ public class BattleController : MonoBehaviour
             // Some abilities and things happens here
             // Kill units with 0 hp and clamp unit hp
             battleText.text = "Turn " + ( i + 1 ) + " End";
-            foreach ( Creature c in creatures )
+            foreach ( Creature c in playerUnits )
                 if ( c.curhealth > c.health ) c.curhealth = c.health;
                 else if ( c.curhealth <= 0 && !c.isDead )
                 {
-                    StartCoroutine ( killUnit ( c ) );
+                    StartCoroutine ( killUnit ( c , deadAllies ) );
+                    yield return new WaitForSeconds ( 0.05f );
+                }
+            foreach ( Creature c in opponentUnits )
+                if ( c.curhealth > c.health ) c.curhealth = c.health;
+                else if ( c.curhealth <= 0 && !c.isDead )
+                {
+                    StartCoroutine ( killUnit ( c , deadEnnemies ) );
                     yield return new WaitForSeconds ( 0.05f );
                 }
 
             yield return StartCoroutine ( executeAbilities ( Ability.triggers.turnEnd ) );
 
             // Move units forward if zone 1 is empty
+            gatherPlayerUnits ();
+            gatherOpponentUnits ();
             BattleZone pz = getZone ( 'p' , 1 );
             BattleZone oz = getZone ( 'o' , 1 );
             if ( pz.creatures.Count == 0 )
@@ -255,7 +275,7 @@ public class BattleController : MonoBehaviour
         // Some abilities and things happens here
         yield return StartCoroutine ( executeAbilities ( Ability.triggers.battleEnd ) );
 
-        endBattle ();
+        StartCoroutine ( endBattle () );
     }
 
     IEnumerator executeAbilities ( Ability.triggers trigger )
@@ -330,10 +350,22 @@ public class BattleController : MonoBehaviour
         moveUnitToZone ( z , c , pos );
     }
 
-    IEnumerator killUnit ( Creature c )
+    IEnumerator killUnit ( Creature c , Dictionary<Creature , int> deads )
     {
         c.isDead = true;
-        loot += c.loot;
+        bool found = false;
+
+        foreach ( KeyValuePair<Creature , int> kvp in deads )
+            if ( kvp.Key.displayName == c.displayName )
+            {
+                deads[ kvp.Key ]++;
+                found = true;
+                break;
+            }
+        if ( !found )
+            deads.Add ( c , 1 );
+
+        c.zone.removeCreature ( c );
 
         // Death animation
         for ( int i = 1 ; i < 7 ; i++ )
@@ -346,15 +378,23 @@ public class BattleController : MonoBehaviour
         }
 
         Color color = c.spriteRenderer.color;
-        for ( int i = 1 ; i < 6 ; i++ )
+        for ( int i = 1 ; i < 11 ; i++ )
         {
             color.a -= 0.1f;
             c.spriteRenderer.color = color;
+            c.healthbar.slider.GetComponent<CanvasGroup>().alpha = color.a;
+            yield return null;
         }
     }
 
-    void endBattle ()
+    IEnumerator endBattle ()
     {
+        gatherPlayerUnits ();
+        gatherOpponentUnits ();
+        int loot = 0;
+
+        battleOutcome.text = playerUnits.Count <= 0 ? "Defeat" : "Victory";
+
         // Hide battle
         battlefieldObj.SetActive ( false );
         playerUnitsObj.SetActive ( false );
@@ -362,40 +402,31 @@ public class BattleController : MonoBehaviour
 
         // Open and fill in battle results
         // Dead creatures on each sides
-        Dictionary<string , int> playerAliveUnits = new Dictionary<string , int> ();
-        Dictionary<string , int> playerDeadUnits = new Dictionary<string , int> ();
-        Dictionary<string , int> opponentAliveUnits = new Dictionary<string , int> ();
-        Dictionary<string , int> opponentDeadUnits = new Dictionary<string , int> ();
+        foreach ( KeyValuePair<Creature , int> c in deadAllies )
+            ;
+        foreach ( KeyValuePair<Creature , int> c in deadEnnemies )
+        {
+            ReportLine rl = Instantiate ( reportLine , linesLayout ).GetComponent<ReportLine> ();
+            rl.sprite.color = new Color ( 0 , 0 , 0 , 0 );
+            rl.creature.text = c.Key.displayName;
+            rl.killed.text = "" + c.Value;
+            loot += c.Value * c.Key.loot;
+            rl.loot.text = "" + loot;
+        }
 
-        foreach ( Creature c in playerUnits )
-            if ( c.isDead )
-            {
-                if ( playerDeadUnits.ContainsKey ( c.displayName ) )
-                    playerDeadUnits[ c.displayName ]++;
-                else playerDeadUnits.Add ( c.displayName , 1 );
-            }
-            else
-            {
-                if ( playerAliveUnits.ContainsKey ( c.displayName ) )
-                    playerAliveUnits[ c.displayName ]++;
-                else playerAliveUnits.Add ( c.displayName , 1 );
-            }
-        foreach ( Creature c in opponentUnits )
-            if ( c.isDead )
-            {
-                if ( opponentDeadUnits.ContainsKey ( c.displayName ) )
-                    opponentDeadUnits[ c.displayName ]++;
-                else opponentDeadUnits.Add ( c.displayName , 1 );
-            }
-            else
-            {
-                if ( opponentAliveUnits.ContainsKey ( c.displayName ) )
-                    opponentAliveUnits[ c.displayName ]++;
-                else opponentAliveUnits.Add ( c.displayName , 1 );
-            }
-
-        // Player earnings
-        StartCoroutine ( battleLoot () );
+        // Battle Report
+        bonusGroup.alpha = 0;
+        lootGroup.alpha = 0;
+        popGroup.alpha = 0;
+        battleReport.SetActive ( true );
+        StartCoroutine ( canvasGroupFade ( bonusGroup , 0 , 1 , 1 ) );
+        StartCoroutine ( battleLoot ( lootBonus , bonusText ) );
+        yield return new WaitForSeconds ( 0.5f );
+        StartCoroutine ( canvasGroupFade ( lootGroup , 0 , 1 , 1 ) );
+        StartCoroutine ( battleLoot ( loot + lootBonus , lootText ) );
+        yield return new WaitForSeconds ( 0.5f );
+        StartCoroutine ( canvasGroupFade ( popGroup , 0 , 1 , 1 ) );
+        StartCoroutine ( battleLoot ( playerUnits.Count <= 0 ? -5 : +5 , populationText ) );
 
         // Destroy dead units and move player units to reserve
         foreach ( Creature c in opponentUnits )
@@ -408,22 +439,21 @@ public class BattleController : MonoBehaviour
                 moveUnitToZone ( playerReserve , c );
     }
 
-    IEnumerator battleLoot ()
+    IEnumerator battleLoot ( int val , TMP_Text target )
     {
-        lootText.text = "0";
-        yield return StartCoroutine ( canvasGroupFade ( lootGroup , 0 , 1 , 1 ) );
+        target.text = "0";
         float length = 3;
-        float step = loot / length;
+        float step = val / length;
         float value = 0;
 
         while ( length > 0 )
         {
             value += step;
-            lootText.text = "" + Mathf.FloorToInt ( value );
+            target.text = "" + Mathf.FloorToInt ( value );
             length -= Time.fixedDeltaTime;
             yield return null;
         }
-        lootText.text = "" + loot;
+        target.text = "" + val;
     }
 
     IEnumerator canvasGroupFade ( CanvasGroup group , float start , float end , float length )

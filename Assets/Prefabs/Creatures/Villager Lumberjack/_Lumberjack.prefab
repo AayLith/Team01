@@ -12,6 +12,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: _Lumberjack
       objectReference: {fileID: 0}
+    - target: {fileID: 1882305954833388948, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: m_Animations.Array.data[0]
+      value: 
+      objectReference: {fileID: 7400000, guid: 52b4173b8ef8a304fb3c019373f95d79, type: 2}
+    - target: {fileID: 1882305954833388948, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: m_Animations.Array.data[1]
+      value: 
+      objectReference: {fileID: 7400000, guid: 0a55b01040b9c01458d0ee6b1b77b76c, type: 2}
+    - target: {fileID: 1882305954833388948, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: m_Animations.Array.data[2]
+      value: 
+      objectReference: {fileID: 7400000, guid: 99515c5c00d10134ead5d03826e298cc, type: 2}
+    - target: {fileID: 1882305954833388948, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: m_Animations.Array.data[3]
+      value: 
+      objectReference: {fileID: 7400000, guid: 895e89c08e321f94cb3e097c771e378d, type: 2}
     - target: {fileID: 2733589463088199768, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -76,6 +92,10 @@ PrefabInstance:
       propertyPath: spriteAnim
       value: 
       objectReference: {fileID: 3626916397498700004, guid: a7fe8f9cbe8bb7a4c860c9607b341b2d, type: 3}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: displayName
+      value: Lumberjack
+      objectReference: {fileID: 0}
     - target: {fileID: 3963952314330151511, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class AbilityAttack : Ability
 {
@@ -30,9 +29,6 @@ public class AbilityAttack : Ability
         // Choose a target at random
         targets.Add ( _targets.getRandomElement () );
         targetRange = caster.zone.range + _targets[ 0 ].zone.range;
-
-        Debug.Log ( ennemyZones[ 0 ] );
-        Debug.Log ( targets[ 0 ] );
     }
 
     protected override IEnumerator animationFirstPart ()
@@ -41,7 +37,10 @@ public class AbilityAttack : Ability
             yield break;
 
         // Caster windup
-        yield return StartCoroutine ( caster.animDash ( 5 , 0.025f ) );
+        //yield return StartCoroutine ( caster.animDash ( 5 , 0.025f ) );
+        caster.animator.Play ( "Windup" );
+        while ( caster.animator.isPlaying )
+            yield return null;
 
         // Cast anim
         if ( cast && targets[ 0 ].zone.range + caster.zone.range == 2 && range == 1 || cast && targets[ 0 ].zone.range + caster.zone.range > 2 && range > 1 )
@@ -51,8 +50,12 @@ public class AbilityAttack : Ability
         }
 
         // Caster jump
-        yield return StartCoroutine ( caster.animDash ( 5 , -0.075f ) );
-        StartCoroutine ( caster.animDash ( 5 , 0.05f ) );
+        //yield return StartCoroutine ( caster.animDash ( 5 , -0.075f ) );
+        caster.animator.Play ( "Assault" );
+        while ( caster.animator.isPlaying )
+            yield return null;
+        //StartCoroutine ( caster.animDash ( 5 , 0.05f ) );
+        caster.animator.Play ( "Windown" );
     }
 
     protected override IEnumerator animationSecondPart ()
