@@ -8,21 +8,31 @@ public class SpellWeakness : Spell
 
     protected override bool costs ()
     {
-        throw new System.NotImplementedException ();
+        return PlayerController.instance.removePopulation ( cost );
     }
 
     protected override List<Creature> getTargetCreatures ()
     {
-        throw new System.NotImplementedException ();
+        List<Creature> targets = new List<Creature> ();
+        foreach ( BattleZone bz in BattleController.instance.opponentZones )
+            targets.AddRange ( bz.creatures );
+        return targets;
     }
 
     protected override Vector3 getTargetPos ()
     {
-        throw new System.NotImplementedException ();
+        Vector3 pos = Vector3.zero;
+        foreach ( BattleZone bz in BattleController.instance.opponentZones )
+            pos += bz.transform.position;
+        return pos / BattleController.instance.opponentZones.Count;
     }
 
     protected override void execute ( Creature c )
     {
-        throw new System.NotImplementedException ();
+        if ( c.attack && c.attack.damages > 1 )
+        {
+            c.attack.damages -= Mathf.Abs ( amount );
+            c.getHit ();
+        }
     }
 }

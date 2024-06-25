@@ -46,10 +46,7 @@ public class SpellFireball : Spell
 
     protected override Vector3 getTargetPos ()
     {
-        Vector3 pos = Vector3.zero;
-        foreach ( BattleZone bz in BattleController.instance.playerZones )
-            pos += bz.transform.position;
-        return pos / BattleController.instance.playerZones.Count;
+        return targetZone.transform.position;
     }
 
     protected override void execute ( Creature c )
