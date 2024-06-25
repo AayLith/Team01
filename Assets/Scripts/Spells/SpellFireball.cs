@@ -9,13 +9,14 @@ public class SpellFireball : Spell
 
     protected override IEnumerator targeting ()
     {
+        SpellCasting.instance.open ( this );
         yield return new WaitForSeconds ( 0.1f );
         while ( true )
         {
             if ( Input.GetAxis ( "Fire2" ) != 0 )
             {
                 PlayerController.instance.addPopulation ( cost );
-                yield break;
+                break;
             }
             if ( Input.GetAxis ( "Fire1" ) != 0 )
             {
@@ -26,10 +27,11 @@ public class SpellFireball : Spell
                 }
                 else
                     PlayerController.instance.addPopulation ( cost );
-                yield break;
+                break;
             }
             yield return null;
         }
+        SpellCasting.instance.close ();
     }
 
     protected override bool costs ()
