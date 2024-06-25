@@ -71,6 +71,13 @@ public class BattleController : MonoBehaviour
                 setHoverUnit ( raycastHit.transform.gameObject.GetComponent<Creature> () );
             }
         }
+        else if ( Physics.Raycast ( ray , out raycastHit , 100f , LayerMask.GetMask ( "OpponentUnit" ) ) )
+        {
+            if ( raycastHit.transform != null )
+            {
+                setHoverUnit ( raycastHit.transform.gameObject.GetComponent<Creature> () );
+            }
+        }
         else
             setHoverUnit ( null );
 
@@ -83,6 +90,11 @@ public class BattleController : MonoBehaviour
         }
         else
             setHoverZone ( null );
+
+        if ( Input.GetAxis ( "Fire1" ) != 0 && hoverUnit != null )
+            UnitTooltip.instance.setToolTip ( hoverUnit );
+        else
+            UnitTooltip.instance.hide ();
     }
 
     public void startBattlePreparation ( List<Creature> player , List<Creature> opponent )
@@ -143,30 +155,45 @@ public class BattleController : MonoBehaviour
         {
             currentUnit = hoverUnit;
 
-            // If L-click on a player creature, start dragging
             if ( Input.GetAxis ( "Fire1" ) != 0 && currentUnit != null )
             {
-                currentUnit.zone = null;
-                while ( Input.GetAxis ( "Fire1" ) != 0 )
+                // If L-click on a player creature, start dragging
+                if ( currentUnit.tag == "PlayerUnit" )
                 {
-                    currentUnit.transform.position = mouseWorldPos + unitSelectOffset;
-                    currentUnit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 (
-                        currentUnit.spriteRenderer.transform.rotation.eulerAngles.x ,
-                        currentUnit.spriteRenderer.transform.rotation.eulerAngles.y ,
-                        Mathf.Sin ( Time.time * 20 ) * 25 ) );
-                    yield return null;
+                    currentUnit.zone = null;
+                    while ( Input.GetAxis ( "Fire1" ) != 0 )
+                    {
+                        currentUnit.transform.position = mouseWorldPos + unitSelectOffset;
+                        currentUnit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 (
+                            currentUnit.spriteRenderer.transform.rotation.eulerAngles.x ,
+                            currentUnit.spriteRenderer.transform.rotation.eulerAngles.y ,
+                            Mathf.Sin ( Time.time * 20 ) * 25 ) );
+                        yield return null;
+                    }
+                    // If cursor is over a player zone
+                    if ( playerZones.Contains ( hoverZone ) || hoverZone == playerReserve )
+                        moveUnitToZone ( hoverZone , currentUnit , mouseWorldPos );
+                    else
+                        moveUnitToZone ( playerReserve , currentUnit );
+                    currentUnit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( currentUnit.spriteRenderer.transform.rotation.eulerAngles.x , 0 , 0 ) );
+
                 }
-                // If cursor is over a player zone
-                if ( playerZones.Contains ( hoverZone ) || hoverZone == playerReserve )
-                    moveUnitToZone ( hoverZone , currentUnit , mouseWorldPos );
-                else
-                    moveUnitToZone ( playerReserve , currentUnit );
-                currentUnit.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 ( currentUnit.spriteRenderer.transform.rotation.eulerAngles.x , 0 , 0 ) );
+                else /*if (currentUnit.tag == "OpponentUnit" )*/
+                {
+                    while ( Input.GetAxis ( "Fire1" ) != 0 )
+                        yield return null;
+                }
             }
 
-            // If R-click on a player creature, return it to the reserve
+            // If R-click on a player creature, return it to the reserve, or place it into its preferedZone if it is already in the reserve
             else if ( Input.GetAxis ( "Fire2" ) != 0 && currentUnit != null )
-                moveUnitToZone ( playerReserve , currentUnit );
+                if ( currentUnit.zone != playerReserve )
+                    moveUnitToZone ( playerReserve , currentUnit );
+                else
+                {
+                    BattleZone bz = getZone ( 'p' , currentUnit.preferedRange );
+                    if ( bz ) moveUnitToZone ( bz , currentUnit );
+                }
 
             yield return null;
         }
@@ -382,7 +409,7 @@ public class BattleController : MonoBehaviour
         {
             color.a -= 0.1f;
             c.spriteRenderer.color = color;
-            c.healthbar.slider.GetComponent<CanvasGroup>().alpha = color.a;
+            c.healthbar.slider.GetComponent<CanvasGroup> ().alpha = color.a;
             yield return null;
         }
     }
@@ -407,7 +434,7 @@ public class BattleController : MonoBehaviour
         foreach ( KeyValuePair<Creature , int> c in deadEnnemies )
         {
             ReportLine rl = Instantiate ( reportLine , linesLayout ).GetComponent<ReportLine> ();
-            rl.sprite.color = new Color ( 0 , 0 , 0 , 0 );
+            rl.sprite.sprite = c.Key.spriteRenderer.sprite;
             rl.creature.text = c.Key.displayName;
             rl.killed.text = "" + c.Value;
             loot += c.Value * c.Key.loot;
@@ -427,6 +454,9 @@ public class BattleController : MonoBehaviour
         yield return new WaitForSeconds ( 0.5f );
         StartCoroutine ( canvasGroupFade ( popGroup , 0 , 1 , 1 ) );
         StartCoroutine ( battleLoot ( playerUnits.Count <= 0 ? -5 : +5 , populationText ) );
+
+        PlayerController.instance.addResources ( loot + lootBonus );
+        PlayerController.instance.addPopulation ( playerUnits.Count <= 0 ? -5 : +5 );
 
         // Destroy dead units and move player units to reserve
         foreach ( Creature c in opponentUnits )

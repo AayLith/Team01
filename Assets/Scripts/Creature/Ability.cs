@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
+    public string displayName;
+
     [Header ( "Animations" )]
     public GameObject cast;
     public GameObject projectile;
@@ -21,7 +23,7 @@ public abstract class Ability : MonoBehaviour
 
     [Header ( "Stats" )]
     [Range ( -10 , 10 )]
-    public int rangedDmg = 0;
+    public int damages = 0;
     [Range ( 1 , 5 )]
     public int range = 1;
 
@@ -72,7 +74,7 @@ public abstract class Ability : MonoBehaviour
             target.getHit ();
 
             // Damages + Effetcs
-            target.takeDamages ( rangedDmg );
+            target.takeDamages ( damages );
 
             yield return new WaitForSeconds ( 0.1f );
         }
@@ -131,4 +133,24 @@ public abstract class Ability : MonoBehaviour
         yield return null;
         Destroy ( projectileAnim );
     }
+
+    protected string triggerToString ()
+    {
+        switch ( trigger )
+        {
+            case triggers.turn:
+                return "During the creature's turn, ";
+            case triggers.battleStart:
+                return "At the start of battle, ";
+            case triggers.turnStart:
+                return "At the beginning of each turn, ";
+            case triggers.battleEnd:
+                return "At the end of battle, ";
+            case triggers.turnEnd:
+                return "At the end of each turn, ";
+        }
+        return "";
+    }
+
+    public abstract override string ToString ();
 }

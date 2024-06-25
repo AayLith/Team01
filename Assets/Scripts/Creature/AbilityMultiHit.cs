@@ -8,7 +8,6 @@ public class AbilityMultiHit : Ability
     [Range ( 1 , 10 )]
     public int multiAttacks = 1;
     [Range ( 0 , 10 )]
-    public int multiHitDmg = 1;
     [HideInInspector] public int targetRange;
 
     public override void setTargets ( List<BattleZone> allyZones , List<BattleZone> ennemyZones , Creature _caster = null )
@@ -33,5 +32,14 @@ public class AbilityMultiHit : Ability
 
         for ( int i = 0 ; i < multiAttacks + 1 && i < _targets.Count ; i++ )
             targets.Add ( _targets[ i ] );
+    }
+
+    public override string ToString ()
+    {
+        string res = "";
+        res += displayName + '\n';
+        res += triggerToString ();
+        res += "deals " + "<color=orange>" + damages + "</color>" + " to " + "<color=#00ffffff>" + multiAttacks + "</color>" + "ennemy targets at range " + "<color=yellow>" + range + "</color>" + '.' + '\n';
+        return res;
     }
 }

@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 289227515945582904, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_Name
-      value: Kobold Scavenger Creature
+      value: _Kobold Scavenger
       objectReference: {fileID: 0}
     - target: {fileID: 289227515945582904, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_Layer
@@ -88,6 +88,10 @@ PrefabInstance:
       propertyPath: spriteAnim
       value: 
       objectReference: {fileID: 3626916397498700004, guid: 13bb96b05bea2af4f909427cb69a6779, type: 3}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: displayName
+      value: Kobold Scavenger
+      objectReference: {fileID: 0}
     - target: {fileID: 4041296940277299746, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_Layer
       value: 10

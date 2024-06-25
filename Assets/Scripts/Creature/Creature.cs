@@ -33,6 +33,7 @@ public class Creature : MonoBehaviour
     //public Outline outline;
 
     [Header ( "Battle" )]
+    [Range ( 1 , 3 )]
     public int preferedRange = 1;
     public int healthWidth = 50;
     public int healthHeight = 7;
@@ -65,6 +66,27 @@ public class Creature : MonoBehaviour
             attack = Instantiate ( attack , transform );
             attack.caster = this;
         }
+    }
+
+    public string abilitiesToString ()
+    {
+        string res = "";
+
+        if ( synergy )
+            res += "<size=120%>" + "<align=\"center\">" + synergy.name + '\n' + "</align>" + "</size>";
+
+        if ( tag == "OpponentUnit" )
+            res += "<size=120%>" + "<align=\"center\">" + "Loot : " + "<color=white>" + loot + "</color>" + '\n' + " </align>" + "</size>";
+
+        res += "<size=120%>" + "<align=\"center\">" + "Health : " + "<color=green>" + curhealth + "</color> / <color=green>" + health + "</color>" + '\n' + "</align>" + "</size>";
+
+        if ( attack )
+            res += "<size=120%>" + "<align=\"center\">" + attack.ToString () + "</align>" + "</size>";
+
+        foreach ( Ability a in abilities )
+            res += a.ToString ();
+
+        return res;
     }
 
     public void takeDamages ( int amount )

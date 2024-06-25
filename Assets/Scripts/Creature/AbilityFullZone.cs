@@ -27,21 +27,30 @@ public class AbilityFullZone : Ability
 
         // Choose a target at random
         _targets = _targets.shuffle ();
-        targets = _targets[0].creatures;
+        targets = _targets[ 0 ].creatures;
         targetRange = caster.zone.range + _targets[ 0 ].range - 1;
     }
 
     protected override IEnumerator animationSecondPart ()
     {
-        yield return StartCoroutine ( attackWindown ( targets[0].transform.position ) );
+        yield return StartCoroutine ( attackWindown ( targets[ 0 ].transform.position ) );
 
         foreach ( Creature c in targets )
         {
             c.getHit ();
             // Damages + Effetcs
-            c.takeDamages ( rangedDmg );
+            c.takeDamages ( damages );
         }
 
         yield return new WaitForSeconds ( 0.3f );
+    }
+
+    public override string ToString ()
+    {
+        string res = "";
+        res += displayName + '\n';
+        res += triggerToString ();
+        res += "deals " + "<color=orange>" + damages + "</color>" + " to all ennemies in a zone at range " + "<color=yellow>" + range + "</color>" + '.' + '\n';
+        return res;
     }
 }

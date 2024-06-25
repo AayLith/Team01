@@ -88,6 +88,14 @@ PrefabInstance:
       propertyPath: spriteAnim
       value: 
       objectReference: {fileID: 3626916397498700004, guid: 712b9d8e44c4b9445bc373d443e9aa11, type: 3}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: displayName
+      value: Kobold Trickster
+      objectReference: {fileID: 0}
+    - target: {fileID: 3842559721067903334, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: preferedRange
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4041296940277299746, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_Layer
       value: 10

@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class AbilityAttack : Ability
 {
     [Header ( "Battle" )]
     [HideInInspector] public int targetRange;
-    [Range ( 0 , 10 )]
-    public int meleeDmg = 1;
 
     public override void setTargets ( List<BattleZone> allyZones , List<BattleZone> ennemyZones , Creature _caster = null )
     {
@@ -68,12 +67,19 @@ public class AbilityAttack : Ability
 
             // Damages + Effetcs
             if ( target.zone.range + caster.zone.range == 2 )
-                target.takeDamages ( meleeDmg );
+                target.takeDamages ( 1 );
             else
-                target.takeDamages ( rangedDmg );
+                target.takeDamages ( damages );
 
             yield return new WaitForSeconds ( 0.1f );
         }
         yield return new WaitForSeconds ( 0.2f );
+    }
+
+    public override string ToString ()
+    {
+        string res = "";
+        res += "Attack : " + "<color=orange>" + damages + "</color>" + " at range " + "<color=yellow>" + range + "</color>" + '\n';
+        return res;
     }
 }

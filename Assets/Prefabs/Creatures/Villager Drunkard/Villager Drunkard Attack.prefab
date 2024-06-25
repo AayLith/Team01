@@ -48,9 +48,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3332041300483430525, guid: 960334c0826ccc8408a412f1d636b6b9, type: 3}
+      propertyPath: damages
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3395913626172505431, guid: 960334c0826ccc8408a412f1d636b6b9, type: 3}
       propertyPath: m_Name
-      value: _Ability Attack
+      value: Villager Drunkard Attack
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

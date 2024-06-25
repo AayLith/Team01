@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.Intrinsics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -7,6 +8,8 @@ public class AbilityAoE : Ability
 {
     [Range ( 1 , 10 )]
     public int secondaryTargets = 1;
+    [Range ( 1 , 10 )]
+    public int secondaryDamages = 1;
     [HideInInspector] public int targetRange;
 
     public override void setTargets ( List<BattleZone> allyZones , List<BattleZone> ennemyZones , Creature _caster = null )
@@ -42,13 +45,25 @@ public class AbilityAoE : Ability
     {
         yield return StartCoroutine ( attackWindown ( targets[ 0 ].transform.position ) );
 
-        foreach ( Creature c in targets )
+        targets[ 0 ].getHit ();
+        // Damages + Effetcs
+        targets[ 0 ].takeDamages ( secondaryDamages );
+        for ( int i = 1 ; i < targets.Count ; i++ )
         {
-            c.getHit ();
+            targets[ i ].getHit ();
             // Damages + Effetcs
-            c.takeDamages ( rangedDmg );
+            targets[ i ].takeDamages ( secondaryDamages );
         }
 
         yield return new WaitForSeconds ( 0.3f );
+    }
+
+    public override string ToString ()
+    {
+        string res = "";
+        res += displayName + '\n';
+        res += triggerToString ();
+        res += "deals " + "<color=orange>" + damages + "</color>" + " to an ennemy at range " + "<color=yellow>" + range + "</color>" + " and " + "<color=orange>" + secondaryDamages + "</color>" + " to " + "<color=#00ffffff>" + secondaryTargets + "</color>" + " additional creatures in the same zone." + '\n';
+        return res;
     }
 }

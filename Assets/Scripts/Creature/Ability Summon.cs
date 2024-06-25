@@ -10,13 +10,11 @@ public class AbilitySummon : Ability
     public enum modes { self_zone, random_zone, zone1, zone2, zone3 }
     public modes mode;
     BattleZone bzTarget;
-    Transform parent;
 
     public override void setTargets ( List<BattleZone> allyZones , List<BattleZone> ennemyZones , Creature _caster = null )
     {
         targets.Clear ();
         targets.Add ( caster );
-        this.parent = parent;
 
         switch ( mode )
         {
@@ -64,5 +62,14 @@ public class AbilitySummon : Ability
             yield return new WaitForSeconds ( 0.1f );
         }
         yield return new WaitForSeconds ( 0.2f );
+    }
+
+    public override string ToString ()
+    {
+        string res = "";
+        res += displayName + '\n';
+        res += triggerToString ();
+        res += "summon " + "<color=#00ffffff>" + amount + "</color>" + ' ' + "<color=#00ffffff>" + summon.displayName + "</color>" + '\n';
+        return res;
     }
 }

@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: _Drunkard
       objectReference: {fileID: 0}
+    - target: {fileID: 289227515945582904, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
+      propertyPath: m_TagString
+      value: OpponentUnit
+      objectReference: {fileID: 0}
     - target: {fileID: 1882305954833388948, guid: 78d889cc4f54ec7459eda80aab43419b, type: 3}
       propertyPath: m_Animations.Array.data[0]
       value: 

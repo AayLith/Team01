@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 2126346593687401046}
   m_Layer: 11
   m_Name: _Creature Ennemy
-  m_TagString: Untagged
+  m_TagString: OpponentUnit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -780,10 +780,6 @@ MonoBehaviour:
   loot: 1
   zone: {fileID: 0}
   isDead: 0
-  windup: {fileID: 7400000, guid: 7caa065728900154bb9760db5b6ab89c, type: 2}
-  windown: {fileID: 7400000, guid: e42d6b9ef816a4440bcce040675000f0, type: 2}
-  assault: {fileID: 7400000, guid: e6557274ec5e4d34a9be07f4fa10879c, type: 2}
-  ability: {fileID: 7400000, guid: 781215854f86d514c92bb362f4f93cb0, type: 2}
 --- !u!54 &1487718179357705927
 Rigidbody:
   m_ObjectHideFlags: 0
