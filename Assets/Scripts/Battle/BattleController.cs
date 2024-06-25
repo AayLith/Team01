@@ -261,18 +261,20 @@ public class BattleController : MonoBehaviour
             // Kill units with 0 hp and clamp unit hp
             battleText.text = "Turn " + ( i + 1 ) + " End";
             foreach ( Creature c in playerUnits )
-                if ( c.curhealth > c.health ) c.curhealth = c.health;
-                else if ( c.curhealth <= 0 && !c.isDead )
+                // if ( c.curhealth > c.health ) c.curhealth = c.health;
+                // else 
+                if ( c.curhealth <= 0 && !c.isDead )
                 {
-                    StartCoroutine ( killUnit ( c , deadAllies ) );
-                    yield return new WaitForSeconds ( 0.05f );
+                    killUnit ( c , deadAllies );
+                    yield return new WaitForSeconds ( 0.1f );
                 }
             foreach ( Creature c in opponentUnits )
-                if ( c.curhealth > c.health ) c.curhealth = c.health;
-                else if ( c.curhealth <= 0 && !c.isDead )
+                // if ( c.curhealth > c.health ) c.curhealth = c.health;
+                // else 
+                if ( c.curhealth <= 0 && !c.isDead )
                 {
-                    StartCoroutine ( killUnit ( c , deadEnnemies ) );
-                    yield return new WaitForSeconds ( 0.05f );
+                    killUnit ( c , deadEnnemies );
+                    yield return new WaitForSeconds ( 0.1f );
                 }
 
             yield return StartCoroutine ( executeAbilities ( Ability.triggers.turnEnd ) );
@@ -377,9 +379,8 @@ public class BattleController : MonoBehaviour
         moveUnitToZone ( z , c , pos );
     }
 
-    IEnumerator killUnit ( Creature c , Dictionary<Creature , int> deads )
+    void killUnit ( Creature c , Dictionary<Creature , int> deads )
     {
-        c.isDead = true;
         bool found = false;
 
         foreach ( KeyValuePair<Creature , int> kvp in deads )
@@ -394,24 +395,7 @@ public class BattleController : MonoBehaviour
 
         c.zone.removeCreature ( c );
 
-        // Death animation
-        for ( int i = 1 ; i < 7 ; i++ )
-        {
-            c.spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 (
-                c.spriteRenderer.transform.rotation.eulerAngles.x ,
-                c.spriteRenderer.transform.rotation.eulerAngles.y ,
-                 i * -5 ) );
-            yield return null;
-        }
-
-        Color color = c.spriteRenderer.color;
-        for ( int i = 1 ; i < 11 ; i++ )
-        {
-            color.a -= 0.1f;
-            c.spriteRenderer.color = color;
-            c.healthbar.slider.GetComponent<CanvasGroup> ().alpha = color.a;
-            yield return null;
-        }
+        StartCoroutine ( c.animDeath () );
     }
 
     IEnumerator endBattle ()

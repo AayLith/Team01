@@ -49,11 +49,12 @@ public class PlayerController : MonoBehaviour
 
     public void addPopulation ( int amount )
     {
-        population += amount;
+        population += Mathf.Abs ( amount );
     }
 
     public bool removePopulation ( int amount )
     {
+        amount = Mathf.Abs ( amount );
         if ( amount > population )
             return false;
         population -= amount;
@@ -62,11 +63,12 @@ public class PlayerController : MonoBehaviour
 
     public void addResources ( int amount )
     {
-        resources += amount;
+        resources += Mathf.Abs ( amount );
     }
 
     public bool removeResources ( int amount )
     {
+        amount = Mathf.Abs ( amount );
         if ( amount > resources )
             return false;
         resources -= amount;
@@ -75,11 +77,12 @@ public class PlayerController : MonoBehaviour
 
     public void addPower ( int amount )
     {
-        power += amount;
+        power += Mathf.Abs ( amount );
     }
 
     public bool removePower ( int amount )
     {
+        amount = Mathf.Abs ( amount );
         if ( amount > power )
             return false;
         power -= amount;

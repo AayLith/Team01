@@ -93,6 +93,7 @@ public class Creature : MonoBehaviour
     {
         curhealth -= amount;
         healthbar.updateValue ( curhealth );
+        getHit ();
     }
 
     public void getHit ()
@@ -102,8 +103,8 @@ public class Creature : MonoBehaviour
 
     IEnumerator hitAnim ()
     {
-        //   yield return StartCoroutine ( animDash ( 5 , 0.025f ) );
-        // yield return StartCoroutine ( animDash ( 5 , -0.025f ) );
+        yield return StartCoroutine ( animDash ( 5 , 0.025f ) );
+        yield return StartCoroutine ( animDash ( 5 , -0.025f ) );
         yield return null;
     }
 
@@ -112,6 +113,29 @@ public class Creature : MonoBehaviour
         for ( int i = 1 ; i < steps + 1 ; i++ )
         {
             spriteRenderer.transform.localPosition += new Vector3 ( distance / steps , 0 , 0 ) * -spriteRenderer.transform.localScale.x;
+            yield return null;
+        }
+    }
+
+    public IEnumerator animDeath ()
+    {
+        isDead = true;
+
+        for ( int i = 1 ; i < 7 ; i++ )
+        {
+            spriteRenderer.transform.rotation = Quaternion.Euler ( new Vector3 (
+                spriteRenderer.transform.rotation.eulerAngles.x ,
+                spriteRenderer.transform.rotation.eulerAngles.y ,
+                 i * -5 ) );
+            yield return null;
+        }
+
+        Color color = spriteRenderer.color;
+        for ( int i = 1 ; i < 11 ; i++ )
+        {
+            color.a -= 0.1f;
+            spriteRenderer.color = color;
+            healthbar.slider.GetComponent<CanvasGroup> ().alpha = color.a;
             yield return null;
         }
     }
