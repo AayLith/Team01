@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     [Header ( "GameObjects" )]
     public Slider populationSlider;
     public Slider resourceSlider;
+    public TMP_Text resourceText;
     public Slider powerSlider;
 
     private void Awake ()
@@ -45,6 +47,8 @@ public class PlayerController : MonoBehaviour
             resourceSlider.value = Mathf.Lerp ( resourceSlider.value , resources , Time.deltaTime );
         if ( powerSlider )
             powerSlider.value = Mathf.Lerp ( powerSlider.value , power , Time.deltaTime );
+
+        resourceText.text = resourceSlider.value.ToString ( "f0" );
     }
 
     public void addPopulation ( int amount )
@@ -59,6 +63,11 @@ public class PlayerController : MonoBehaviour
             return false;
         population -= amount;
         return true;
+    }
+
+    public void killPopulation (int amount )
+    {
+        population -= Mathf.Abs ( amount );
     }
 
     public void addResources ( int amount )

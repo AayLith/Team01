@@ -4,10 +4,11 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using TMPro;
 
-public class BattleController : MonoBehaviour
+public class BattleController : PhaseMenu
 {
     public static BattleController instance;
 
+    [Header("Battle Controller")]
     [Header ( "GameObjects" )]
     public GameObject battlefieldObj;
     public GameObject playerUnitsObj;
@@ -141,9 +142,6 @@ public class BattleController : MonoBehaviour
             moveUnitToZone ( playerReserve , c );
         }
 
-        battlefieldObj.SetActive ( true );
-        playerUnitsObj.SetActive ( true );
-        opponentUnitsObj.SetActive ( true );
         StartCoroutine ( battlePreparation () );
     }
 
@@ -406,10 +404,7 @@ public class BattleController : MonoBehaviour
 
         battleOutcome.text = playerUnits.Count <= 0 ? "Defeat" : "Victory";
 
-        // Hide battle
-        battlefieldObj.SetActive ( false );
-        playerUnitsObj.SetActive ( false );
-        opponentUnitsObj.SetActive ( false );
+        end ();
 
         // Open and fill in battle results
         // Dead creatures on each sides
@@ -440,7 +435,7 @@ public class BattleController : MonoBehaviour
         StartCoroutine ( battleLoot ( playerUnits.Count <= 0 ? -5 : +5 , populationText ) );
 
         PlayerController.instance.addResources ( loot + lootBonus );
-        PlayerController.instance.addPopulation ( playerUnits.Count <= 0 ? -5 : +5 );
+        PlayerController.instance.killPopulation ( playerUnits.Count <= 0 ? -5 : +5 );
 
         // Destroy dead units and move player units to reserve
         foreach ( Creature c in opponentUnits )
@@ -584,5 +579,25 @@ public class BattleController : MonoBehaviour
             playerReserve.addCreature ( c );
         else
             moveUnitToZone ( getPreferedZone ( c ) , c );
+    }
+
+    public override void open ()
+    {
+        PhaseTransition.instance.setText ( phaseText , helpText );
+        battlefieldObj.SetActive ( true );
+        playerUnitsObj.SetActive ( true );
+        opponentUnitsObj.SetActive ( true );
+    }
+
+    public override void close ()
+    {
+        battlefieldObj.SetActive ( false );
+        playerUnitsObj.SetActive ( false );
+        opponentUnitsObj.SetActive ( false );
+    }
+
+    public override void end ()
+    {
+        PhaseTransition.instance.transition ( this , ManagementController.instance );
     }
 }
