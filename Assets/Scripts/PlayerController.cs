@@ -39,6 +39,11 @@ public class PlayerController : MonoBehaviour
         instance = this;
     }
 
+    private void Start ()
+    {
+        BattleController.instance.addExistingPlayerUnit ( units );
+    }
+
     private void Update ()
     {
         if ( populationSlider )

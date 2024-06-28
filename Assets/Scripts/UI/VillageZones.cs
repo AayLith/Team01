@@ -12,14 +12,16 @@ public class VillageZones : MonoBehaviour
     public void SetUIElementsOn()
     {
         backgroundImage.SetActive(true);
-        textImage.SetActive(true);
-        zoneName.SetActive(true);
+        //textImage.SetActive(true);
+        textImage.GetComponent<RectTransform> ().localScale = Vector3.one * 1.1f;
+        //zoneName.SetActive(true);
     }
 
     public void SetUIElementsOff()
     {
         backgroundImage.SetActive(false);
-        textImage.SetActive(false);
-        zoneName.SetActive(false);
+        //textImage.SetActive(false);
+        textImage.GetComponent<RectTransform> ().localScale = Vector3.one;
+        //zoneName.SetActive(false);
     }
 }

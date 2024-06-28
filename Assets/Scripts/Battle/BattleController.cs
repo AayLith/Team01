@@ -8,8 +8,9 @@ public class BattleController : PhaseMenu
 {
     public static BattleController instance;
 
-    [Header("Battle Controller")]
+    [Header ( "Battle Controller" )]
     [Header ( "GameObjects" )]
+    public GameObject canvasOBJ;
     public GameObject battlefieldObj;
     public GameObject playerUnitsObj;
     public GameObject opponentUnitsObj;
@@ -98,6 +99,77 @@ public class BattleController : PhaseMenu
             UnitTooltip.instance.hide ();
     }
 
+    public void addExistingPlayerUnit ( List<Creature> units )
+    {
+        foreach ( Creature unit in units )
+            moveUnitToZone ( playerReserve , unit );
+    }
+
+    public void addExistingPlayerUnit ( Creature unit )
+    {
+        moveUnitToZone ( playerReserve , unit );
+    }
+
+    public void addPlayerUnit ( List<Creature> units )
+    {
+        Creature c;
+        foreach ( Creature unit in units )
+        {
+            c = Instantiate ( unit.gameObject , playerUnitsObj.transform ).GetComponent<Creature> ();
+            moveUnitToZone ( playerReserve , unit );
+        }
+    }
+
+    public void addPlayerUnit ( Creature unit )
+    {
+        unit = Instantiate ( unit.gameObject , playerUnitsObj.transform ).GetComponent<Creature> ();
+        // Place creatures inside their prefered zones
+        moveUnitToZone ( playerReserve , unit );
+    }
+
+    public void addExistingOpponentUnit ( List<Creature> units )
+    {
+        foreach ( Creature unit in units )
+            moveUnitToZone ( getPreferedZone ( unit ) , unit );
+    }
+
+    public void addExistingOpponentUnit ( Creature unit )
+    {
+        moveUnitToZone ( getPreferedZone ( unit ) , unit );
+    }
+
+    public void addOpponentUnit ( List<Creature> units )
+    {
+        Creature c;
+        foreach ( Creature unit in units )
+        {
+            c = Instantiate ( unit.gameObject , opponentUnitsObj.transform ).GetComponent<Creature> ();
+            moveUnitToZone ( getPreferedZone ( unit ) , unit );
+        }
+    }
+
+    public void addOpponentUnit ( Dictionary<Creature , int> units )
+    {
+        Creature c;
+        foreach ( KeyValuePair<Creature , int> kvp in units )
+        {
+            for ( int i = 0 ; i < kvp.Value ; i++ )
+            {
+                c = Instantiate ( kvp.Key.gameObject , playerUnitsObj.transform ).GetComponent<Creature> ();
+                moveUnitToZone ( playerReserve , c ); opponentUnits.Add ( c );
+                if ( opponentUnits.Count > 1000 )
+                    break;
+            }
+        }
+    }
+
+    public void addOpponentUnit ( Creature unit )
+    {
+        unit = Instantiate ( unit.gameObject , opponentUnitsObj.transform ).GetComponent<Creature> ();
+        // Place creatures inside their prefered zones
+        moveUnitToZone ( getPreferedZone ( unit ) , unit );
+    }
+
     public void startBattlePreparation ( List<Creature> player , List<Creature> opponent )
     {
         Dictionary<Creature , int> army = new Dictionary<Creature , int> ();
@@ -133,7 +205,7 @@ public class BattleController : PhaseMenu
                     break;
             }
         }
-
+        /*
         foreach ( Creature c in player )
         {
             // TODO Instanciate creatures
@@ -141,7 +213,21 @@ public class BattleController : PhaseMenu
             // Placer creatures inside player reserve zone
             moveUnitToZone ( playerReserve , c );
         }
+        */
+        StartCoroutine ( battlePreparation () );
+    }
 
+    void startBattlePreparation ()
+    {
+        // Clear some stuff
+        lootBonus = 0;
+        playerUnits.Clear ();
+        opponentUnits.Clear ();
+        deadAllies.Clear ();
+        deadEnnemies.Clear ();
+        currentPhase = battlePhases.preparation;
+
+        // Lets Fight
         StartCoroutine ( battlePreparation () );
     }
 
@@ -191,6 +277,8 @@ public class BattleController : PhaseMenu
                 {
                     BattleZone bz = getZone ( 'p' , currentUnit.preferedRange );
                     if ( bz ) moveUnitToZone ( bz , currentUnit );
+                    hoverUnit = null;
+                    currentUnit = null;
                 }
 
             yield return null;
@@ -511,16 +599,16 @@ public class BattleController : PhaseMenu
         {
             if ( hoverZone != null )
             {
-                setZoneColor ( hoverZone , 0.25f );
+                setZoneColor ( hoverZone , 0.5f );
                 hoverZone = null;
             }
         }
         else
         {
             if ( hoverZone != null )
-                setZoneColor ( hoverZone , 0.25f );
+                setZoneColor ( hoverZone , 0.5f );
             hoverZone = bz;
-            setZoneColor ( hoverZone , 1f );
+            setZoneColor ( hoverZone , 2f );
         }
     }
 
@@ -528,7 +616,7 @@ public class BattleController : PhaseMenu
     {
         Color c;
         c = hoverZone.sprite.color;
-        c.a = a;
+        c.a = c.a * a;
         hoverZone.sprite.color = c;
     }
 
@@ -587,6 +675,8 @@ public class BattleController : PhaseMenu
         battlefieldObj.SetActive ( true );
         playerUnitsObj.SetActive ( true );
         opponentUnitsObj.SetActive ( true );
+        canvasOBJ.SetActive ( true );
+        startBattlePreparation ();
     }
 
     public override void close ()
@@ -594,6 +684,7 @@ public class BattleController : PhaseMenu
         battlefieldObj.SetActive ( false );
         playerUnitsObj.SetActive ( false );
         opponentUnitsObj.SetActive ( false );
+        canvasOBJ.SetActive ( false );
     }
 
     public override void end ()
